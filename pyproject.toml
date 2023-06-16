@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=40.8.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "psychopy-eyetracker-pupil-labs"
+version = "0.0.1"
+description = "Extension package for PsychoPy which adds support for Pupil Labs eyetrackers."
+readme = "README.md"
+requires-python = ">= 3.7"
+license = {text = "GNU General Public License v3 (GPLv3)"}
+authors = [
+  { name = "Sol Simpson", email = "info@isolver-software.com" },
+  { name = "Matthew Cutone", email = "mcutone@opensceincetools.org" },
+  { name = "Jon Peirce", email = "jon@opensceincetools.org" },
+]
+classifiers = [
+  "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: Implementation :: CPython",
+]
+urls.homepage = "https://github.com/psychopy/psychopy-eyetracker-pupil-labs"
+urls.changelog = "https://github.com/psychopy/psychopy-eyetracker-pupil-labs/blob/main/CHANGELOG.txt"
+urls.documentation = "https://pages.github.com/psychopy/psychopy-eyetracker-pupil-labs"
+urls.repository = "https://github.com/psychopy/psychopy-eyetracker-pupil-labs"
+dependencies = [
+]
+[tool.setuptools.packages.find]
+where = ["", "psychopy_eyetracker_pupil_labs",]
+
+[tool.setuptools.package-data]
+"*" = ["*.yaml"]
