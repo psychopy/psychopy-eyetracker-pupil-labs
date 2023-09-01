@@ -36,3 +36,6 @@ where = ["", "psychopy_eyetracker_pupil_labs",]
 
 [tool.setuptools.package-data]
 "*" = ["*.yaml"]
+
+[project.entry-points."psychopy.experiment.components"]
+AprilTagComponent = "psychopy_eyetracker_pupil_labs:AprilTagComponent"
