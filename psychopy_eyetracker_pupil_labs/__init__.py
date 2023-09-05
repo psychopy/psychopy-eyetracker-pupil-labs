@@ -11,21 +11,20 @@ from psychopy.localization import _translate
 
 import numpy as np
 
-from pupil_labs.realtime_screen_gaze import marker_generator
+from pupil_labs.real_time_screen_gaze import marker_generator
 
 
 class AprilTagStim(ImageStim):
-    def __init__(self, marker_id=0, *args, **kwargs):
+    def __init__(self, marker_id=0, contrast=1.0, *args, **kwargs):
         self.marker_id = marker_id
 
         marker_data = marker_generator.generate_marker(marker_id, flip_x=True).astype(float)
-        marker_data[marker_data == 0] = -1
-        marker_data[marker_data > 0] = 1
+        marker_data[marker_data == 0] = -contrast
+        marker_data[marker_data > 0] = contrast
 
-        marker_data = np.pad(marker_data, pad_width=1, mode="constant", constant_values=1)
+        marker_data = np.pad(marker_data, pad_width=1, mode="constant", constant_values=contrast)
 
         super().__init__(image=marker_data, *args, **kwargs)
-
 
     def get_marker_verts(self):
         vertices_in_pixels =  self._vertices.pix
@@ -91,29 +90,32 @@ class AprilTagComponent(BaseVisualComponent):
                         ],
             updates='constant',
             hint=_translate("Which point on the stimulus should be anchored to its exact position?"),
-            label=_translate("Anchor"))
+            label=_translate("Anchor")
+        )
+
+        del self.params['units']
+        del self.params['color']
+        del self.params['colorSpace']
+        del self.params['fillColor']
+        del self.params['borderColor']
+        del self.params['opacity']
+        del self.params['ori']
 
         self.marker_id = marker_id
         AprilTagComponent._instances.append(self)
 
-
     def writeInitCode(self, buff):
         AprilTagComponent._routine_start_written = False
-
-        # do we need units code?
-        if self.params['units'].val == 'from exp settings':
-            unitsStr = ""
-        else:
-            unitsStr = "units=%(units)s, " % self.params
 
         # replace variable params with defaults
         inits = getInitVals(self.params, 'PsychoPy')
         code = ("{inits[name]} = AprilTagStim(\n"
                 "    win=win,\n"
-                "    name='{inits[name]}', {units}\n"
+                "    name='{inits[name]}', units='pix',\n"
+                "    contrast={inits[contrast]},\n"
                 "    marker_id=int({inits[marker_id]}), anchor={inits[anchor]},\n"
                 "    pos={inits[pos]}, size={inits[size]}"
-                .format(inits=inits, units=unitsStr))
+                .format(inits=inits))
 
         depth = -self.getPosInRoutine()
         code += ", depth=%.1f)\n" % depth
