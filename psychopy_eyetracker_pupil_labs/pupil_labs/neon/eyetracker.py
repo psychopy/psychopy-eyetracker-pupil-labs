@@ -13,7 +13,7 @@ from psychopy.iohub.errors import printExceptionDetailsToStdErr
 from psychopy.iohub.constants import EventConstants, EyeTrackerConstants
 
 from pupil_labs.realtime_api.simple import Device as CompanionDevice
-from pupil_labs.realtime_screen_gaze.gaze_mapper import GazeMapper
+from pupil_labs.real_time_screen_gaze.gaze_mapper import GazeMapper
 
 logger = logging.getLogger(__name__)
 
