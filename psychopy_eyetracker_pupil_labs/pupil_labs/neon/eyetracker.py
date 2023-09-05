@@ -200,9 +200,7 @@ class EyeTracker(EyeTrackerDevice):
             else:
                 self._device.recording_stop_and_save()
 
-            self._actively_recording = self._device.is_recording
-        else:
-            self._actively_recording = should_be_recording
+        self._actively_recording = should_be_recording
 
         is_recording_enabled = self.isRecordingEnabled()
 
