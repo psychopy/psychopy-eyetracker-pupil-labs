@@ -59,6 +59,7 @@ class EyeTracker(EyeTrackerDevice):
         EyeTrackerDevice.__init__(self, *args, **kwargs)
 
         self._device = None
+        self._time_offset_estimate = None
 
         self._latest_sample = None
         self._latest_gaze_position = None
@@ -121,12 +122,12 @@ class EyeTracker(EyeTrackerDevice):
         :return:
             bool: indicates the current connection state to the eye tracking hardware.
         """
-        print('setConnectionState', enable)
         if enable and self._device is None:
             self._device = CompanionDevice(
                 self._runtime_settings["companion_address"],
                 int(self._runtime_settings["companion_port"]),
             )
+            self._time_offset_estimate = self._device.estimate_time_offset()
             self._device.receive_matched_scene_video_frame_and_gaze()
 
         elif not enable and self._device is not None:
@@ -292,7 +293,6 @@ class EyeTracker(EyeTrackerDevice):
 
             self._add_gaze_sample(gaze_in_display_units, gaze, logged_time)
 
-
     def _add_gaze_sample(self, surface_gaze, gaze_datum, logged_time):
         native_time = gaze_datum.timestamp_unix_seconds
         iohub_time = self._trackerTimeInPsychopyTime(native_time)
@@ -370,7 +370,6 @@ class EyeTracker(EyeTrackerDevice):
         self._latest_sample = sample
         self._latest_gaze_position = surface_gaze
 
-
     def register_surface(self, tag_verts, window_size):
         corrected_verts = {}
         for tag_id_str,verts in tag_verts.items():
@@ -394,12 +393,10 @@ class EyeTracker(EyeTrackerDevice):
         return self._eyeTrackerToDisplayCoords(gaze_in_display_coords)
 
     def _psychopyTimeInTrackerTime(self, psychopy_time):
-        # @TODO
-        return psychopy_time # + self._pupil_remote.psychopy_pupil_clock_offset
+        return psychopy_time + self._time_offset_estimate.time_offset_ms.mean / 1000
 
     def _trackerTimeInPsychopyTime(self, tracker_time):
-        # @TODO
-        return tracker_time # - self._pupil_remote.psychopy_pupil_clock_offset
+        return tracker_time - self._time_offset_estimate.time_offset_ms.mean / 1000
 
     def _close(self):
         """Do any final cleanup of the eye tracker before the object is
