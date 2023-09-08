@@ -30,6 +30,8 @@ urls.changelog = "https://github.com/psychopy/psychopy-eyetracker-pupil-labs/blo
 urls.documentation = "https://pages.github.com/psychopy/psychopy-eyetracker-pupil-labs"
 urls.repository = "https://github.com/psychopy/psychopy-eyetracker-pupil-labs"
 dependencies = [
+  "pupil-labs-realtime-api",
+  "real-time-screen-gaze@git+https://github.com/pupil-labs/real-time-screen-gaze"
 ]
 [tool.setuptools.packages.find]
 where = ["", "psychopy_eyetracker_pupil_labs",]
