@@ -68,15 +68,7 @@ class EyeTracker(EyeTrackerDevice):
         self._screen_surface = None
         self._window_size = None
 
-        try:
-            with open(self._runtime_settings["camera_calibration"]) as fh:
-                scene_camera = json.load(fh)
-                self._gaze_mapper = GazeMapper(scene_camera)
-
-        except FileNotFoundError as exc:
-            printExceptionDetailsToStdErr(exc)
-            raise exc
-
+        self._gaze_mapper = None
 
         self.setConnectionState(True)
 
@@ -127,6 +119,10 @@ class EyeTracker(EyeTrackerDevice):
                 self._runtime_settings["companion_address"],
                 int(self._runtime_settings["companion_port"]),
             )
+
+            calibration = self._device.get_calibration()
+            self._gaze_mapper = GazeMapper(calibration)
+
             self._time_offset_estimate = self._device.estimate_time_offset()
             self._device.receive_matched_scene_video_frame_and_gaze()
 

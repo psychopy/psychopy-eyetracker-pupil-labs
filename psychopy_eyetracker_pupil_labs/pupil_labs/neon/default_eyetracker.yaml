@@ -54,4 +54,3 @@ eyetracker.hw.pupil_labs.neon.EyeTracker:
         companion_address: neon.local
         companion_port: 8080
         recording_enabled: True
-        camera_calibration: scene_camera.json
