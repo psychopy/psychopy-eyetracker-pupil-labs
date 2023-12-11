@@ -13,6 +13,7 @@ authors = [
   { name = "Sol Simpson", email = "info@isolver-software.com" },
   { name = "Matthew Cutone", email = "mcutone@opensceincetools.org" },
   { name = "Jon Peirce", email = "jon@opensceincetools.org" },
+  { name = "Dominic Canare", email = "dom@pupil-labs.com" },
 ]
 classifiers = [
   "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
@@ -31,7 +32,7 @@ urls.documentation = "https://pages.github.com/psychopy/psychopy-eyetracker-pupi
 urls.repository = "https://github.com/psychopy/psychopy-eyetracker-pupil-labs"
 dependencies = [
   "pupil-labs-realtime-api",
-  "real-time-screen-gaze@git+https://github.com/pupil-labs/real-time-screen-gaze"
+  "real-time-screen-gaze"
 ]
 [tool.setuptools.packages.find]
 where = ["", "psychopy_eyetracker_pupil_labs",]
