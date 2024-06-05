@@ -93,7 +93,6 @@ class AprilTagComponent(BaseVisualComponent):
             label=_translate("Anchor")
         )
 
-        del self.params['units']
         del self.params['color']
         del self.params['colorSpace']
         del self.params['fillColor']
@@ -111,7 +110,7 @@ class AprilTagComponent(BaseVisualComponent):
         inits = getInitVals(self.params, 'PsychoPy')
         code = ("{inits[name]} = AprilTagStim(\n"
                 "    win=win,\n"
-                "    name='{inits[name]}', units='pix',\n"
+                "    name='{inits[name]}', units={inits[units]},\n"
                 "    contrast={inits[contrast]},\n"
                 "    marker_id=int({inits[marker_id]}), anchor={inits[anchor]},\n"
                 "    pos={inits[pos]}, size={inits[size]}"
