@@ -34,6 +34,20 @@ dependencies = [
   "pupil-labs-realtime-api",
   "real-time-screen-gaze"
 ]
+
+[project.optional-dependencies]
+# dependencies for building the docs
+docs = [
+  "psychopy",
+  "sphinx",
+  "furo",
+]
+# dependencies for running the test suite
+tests = [
+  "psychopy",
+  "pytest",
+]
+
 [tool.setuptools.packages.find]
 where = ["", "psychopy_eyetracker_pupil_labs",]
 
