@@ -23,7 +23,7 @@ from psychopy.iohub.errors import print2err, printExceptionDetailsToStdErr
 logger = logging.getLogger(__name__)
 
 
-class EyeTracker(EyeTrackerDevice):
+class PupilCoreEyeTracker(EyeTrackerDevice):
     """
     Implementation of the :py:class:`Common Eye Tracker Interface <.EyeTrackerDevice>`
     for the Pupil Core headset.

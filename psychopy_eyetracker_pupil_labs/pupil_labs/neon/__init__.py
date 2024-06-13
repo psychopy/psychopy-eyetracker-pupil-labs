@@ -4,6 +4,6 @@
 # Distributed under the terms of the GNU General Public License (GPL).
 
 from psychopy.iohub.devices.eyetracker.eye_events import BinocularEyeSampleEvent
-from .eyetracker import EyeTracker
+from .eyetracker import NeonEyeTracker
 
-__all__ = ["EyeTracker", "BinocularEyeSampleEvent"]
+__all__ = ["NeonEyeTracker", "BinocularEyeSampleEvent"]
