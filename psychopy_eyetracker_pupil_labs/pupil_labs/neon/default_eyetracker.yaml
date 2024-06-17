@@ -1,4 +1,4 @@
-eyetracker.hw.pupil_labs.neon.EyeTracker:
+eyetracker.pupil_labs.neon.EyeTracker:
     # Indicates if the device should actually be loaded at experiment runtime.
     enable: True
 
