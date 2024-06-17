@@ -54,13 +54,9 @@ where = ["", "psychopy_eyetracker_pupil_labs",]
 [tool.setuptools.package-data]
 "*" = ["*.yaml", "*.png"]
 
-[project.entry-points."psychopy.iohub.devices"]
-NeonEyeTracker = "psychopy_eyetracker_pupil_labs.pupil_labs.neon.eyetracker:NeonEyeTracker"
-PupilCoreEyeTracker = "psychopy_eyetracker_pupil_labs.pupil_labs.pupil_core.eyetracker:PupilCoreEyeTracker"
-
 [project.entry-points."psychopy.iohub.devices.eyetracker"]
-NeonEyeTracker = "psychopy_eyetracker_pupil_labs.pupil_labs.neon.eyetracker:NeonEyeTracker"
-PupilCoreEyeTracker = "psychopy_eyetracker_pupil_labs.pupil_labs.pupil_core.eyetracker:PupilCoreEyeTracker"
+neon = "psychopy_eyetracker_pupil_labs.pupil_labs.neon"
+pupil_core = "psychopy_eyetracker_pupil_labs.pupil_labs.pupil_core"
 
 [project.entry-points."psychopy.experiment.components"]
 AprilTagComponent = "psychopy_eyetracker_pupil_labs:AprilTagComponent"
