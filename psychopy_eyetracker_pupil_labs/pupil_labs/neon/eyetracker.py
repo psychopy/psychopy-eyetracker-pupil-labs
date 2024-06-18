@@ -16,7 +16,7 @@ from pupil_labs.realtime_api.simple import Device as CompanionDevice
 from pupil_labs.real_time_screen_gaze.gaze_mapper import GazeMapper
 
 
-class EyeTracker(EyeTrackerDevice):
+class NeonEyeTracker(EyeTrackerDevice):
     """
     Implementation of the :py:class:`Common Eye Tracker Interface <.EyeTrackerDevice>`
     for the Pupil Core headset.

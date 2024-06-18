@@ -6,6 +6,6 @@ from psychopy.iohub.devices.eyetracker.eye_events import (
     MonocularEyeSampleEvent,
     BinocularEyeSampleEvent,
 )
-from .eyetracker import EyeTracker
+from .eyetracker import PupilCoreEyeTracker
 
-__all__ = ["EyeTracker", "MonocularEyeSampleEvent", "BinocularEyeSampleEvent"]
+__all__ = ["PupilCoreEyeTracker", "MonocularEyeSampleEvent", "BinocularEyeSampleEvent"]
