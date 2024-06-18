@@ -15,8 +15,6 @@ from psychopy.iohub.constants import EventConstants, EyeTrackerConstants
 from pupil_labs.realtime_api.simple import Device as CompanionDevice
 from pupil_labs.real_time_screen_gaze.gaze_mapper import GazeMapper
 
-logger = logging.getLogger(__name__)
-
 
 class EyeTracker(EyeTrackerDevice):
     """
@@ -144,7 +142,7 @@ class EyeTracker(EyeTrackerDevice):
         """
         return self._device is not None
 
-    def runSetupProcedure(self, calibration_args: Optional[Dict] =None) -> int:
+    def runSetupProcedure(self, calibration_args: Optional[Dict] = None) -> int:
         """
         The runSetupProcedure method starts the Pupil Capture calibration choreography.
 
@@ -236,7 +234,7 @@ class EyeTracker(EyeTrackerDevice):
         """
         return self._latest_sample
 
-    def getLastGazePosition(self) -> Optional[Tuple[float,float]]:
+    def getLastGazePosition(self) -> Optional[Tuple[float, float]]:
         """The getLastGazePosition method returns the most recent eye gaze
         position received from the Eye Tracker. This is the position on the
         calibrated 2D surface that the eye tracker is reporting as the current
@@ -366,9 +364,9 @@ class EyeTracker(EyeTrackerDevice):
 
     def register_surface(self, tag_verts, window_size):
         corrected_verts = {}
-        for tag_id_str,verts in tag_verts.items():
+        for tag_id_str, verts in tag_verts.items():
             corrected_verts[int(tag_id_str)] = [
-                (vert[0]+window_size[0]/2, vert[1]+window_size[1]/2) for vert in verts
+                (vert[0] + window_size[0] / 2, vert[1] + window_size[1] / 2) for vert in verts
             ]
 
         self._gaze_mapper.clear_surfaces()
@@ -378,13 +376,6 @@ class EyeTracker(EyeTrackerDevice):
         )
 
         self._window_size = window_size
-
-    def _gaze_in_display_coords(self, gaze_on_surface_datum):
-        gaze_x, gaze_y = gaze_on_surface_datum["norm_pos"]
-        width, height = self._display_device.getPixelResolution()
-        # normalized to pixel coordinates:
-        gaze_in_display_coords = int(gaze_x * width), int((1.0 - gaze_y) * height)
-        return self._eyeTrackerToDisplayCoords(gaze_in_display_coords)
 
     def _psychopyTimeInTrackerTime(self, psychopy_time):
         return psychopy_time + self._time_offset_estimate.time_offset_ms.mean / 1000
