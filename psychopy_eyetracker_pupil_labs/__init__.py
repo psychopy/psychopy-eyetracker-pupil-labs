@@ -27,8 +27,13 @@ class AprilTagStim(ImageStim):
         super().__init__(image=marker_data, *args, **kwargs)
 
     def get_marker_verts(self):
-        vertices_in_pixels =  self._vertices.pix
-        padding = self.size[0]/10
+        vertices_in_pixels = self._vertices.pix
+        size_with_margin = (
+            abs(vertices_in_pixels[1][0] - vertices_in_pixels[0][0]),
+            abs(vertices_in_pixels[2][1] - vertices_in_pixels[0][1])
+        )
+        size_without_margin = [v * 0.8 for v in size_with_margin]
+        padding = size_with_margin[0] * 0.1
 
         top_left_pos = vertices_in_pixels[2]
 
@@ -37,8 +42,8 @@ class AprilTagStim(ImageStim):
             top_left_pos[1] - padding
         )
         bottom_right = (
-            top_left_pos[0] + self.size[0] - padding,
-            top_left_pos[1] - self.size[1] + padding
+            top_left[0] + size_without_margin[0],
+            top_left[1] - size_without_margin[1]
         )
 
         return (
@@ -65,12 +70,13 @@ class AprilTagComponent(BaseVisualComponent):
         self.url = "https://april.eecs.umich.edu/software/apriltag.html"
         self.exp.requirePsychopyLibs(['visual'])
         self.exp.requireImport('AprilTagStim', 'psychopy_eyetracker_pupil_labs')
+        self.exp.requireImport('convertToPix', 'psychopy.tools.monitorunittools')
 
         self.order += ['marker_id']
 
         self.params['marker_id'] = Param(marker_id,
             valType='int', inputType="spin", categ='Basic',
-            updates='constant', allowedVals=[0,512],
+            updates='constant', allowedVals=[0, 512],
             allowedUpdates=['constant', 'set every repeat', 'set every frame'],
             hint=_translate("The ID of the AprilTag marker to display"),
             label=_translate("Marker ID")
@@ -140,7 +146,8 @@ class AprilTagComponent(BaseVisualComponent):
             code += "        str({inits[name]}.marker_id): {inits[name]}.get_marker_verts(),\n".format(inits=inits)
 
         code += "    }\n"
-        code += "    eyetracker.register_surface(tag_verts, win.size)"
+        code += "    mac_friendly_win_size = convertToPix(np.array([0, 0]), np.array([2, 2]), 'norm', win)\n"
+        code += "    eyetracker.register_surface(tag_verts, mac_friendly_win_size)\n"
         buff.writeIndentedLines(code)
 
         AprilTagComponent._routine_start_written = True
