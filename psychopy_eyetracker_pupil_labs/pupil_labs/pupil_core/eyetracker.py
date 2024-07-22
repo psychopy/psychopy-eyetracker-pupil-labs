@@ -109,7 +109,6 @@ class PupilCoreEyeTracker(EyeTrackerDevice):
         self._pupil_remote_subscriptions.append("notify.calibration")
 
         capture_recording_settings = self._runtime_settings["pupil_capture_recording"]
-        self._capture_recording_enabled = capture_recording_settings["enabled"]
         self._capture_recording_location = capture_recording_settings["location"]
 
         self._gaze_bisectors_by_topic = defaultdict(MutableBisector)
@@ -256,16 +255,14 @@ class PupilCoreEyeTracker(EyeTrackerDevice):
         """
         if not self.isConnected():
             return False
-        if self._capture_recording_enabled:
-            if should_be_recording:
-                self._pupil_remote.start_recording(
-                    rec_name=self._capture_recording_location
-                )
-            else:
-                self._pupil_remote.stop_recording()
-            self._actively_recording = self._pupil_remote.is_recording
+
+        if should_be_recording:
+            self._pupil_remote.start_recording(
+                rec_name=self._capture_recording_location
+            )
         else:
-            self._actively_recording = should_be_recording
+            self._pupil_remote.stop_recording()
+        self._actively_recording = self._pupil_remote.is_recording
 
         is_recording_enabled = self.isRecordingEnabled()
 

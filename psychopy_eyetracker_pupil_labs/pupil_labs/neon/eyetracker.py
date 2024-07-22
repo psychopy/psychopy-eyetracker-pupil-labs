@@ -190,11 +190,10 @@ class NeonEyeTracker(EyeTrackerDevice):
         if not self.isConnected():
             return False
 
-        if self._runtime_settings["recording_enabled"]:
-            if should_be_recording:
-                self._device.recording_start()
-            else:
-                self._device.recording_stop_and_save()
+        if should_be_recording:
+            self._device.recording_start()
+        else:
+            self._device.recording_stop_and_save()
 
         self._actively_recording = should_be_recording
 

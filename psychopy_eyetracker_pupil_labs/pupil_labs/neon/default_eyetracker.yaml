@@ -53,4 +53,3 @@ eyetracker.hw.pupil_labs.neon.EyeTracker:
     runtime_settings:
         companion_address: neon.local
         companion_port: 8080
-        recording_enabled: True
