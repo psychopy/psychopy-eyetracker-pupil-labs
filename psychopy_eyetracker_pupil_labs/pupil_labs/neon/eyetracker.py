@@ -16,7 +16,7 @@ from pupil_labs.realtime_api.simple import Device as CompanionDevice
 from pupil_labs.real_time_screen_gaze.gaze_mapper import GazeMapper
 
 
-class NeonEyeTracker(EyeTrackerDevice):
+class EyeTracker(EyeTrackerDevice):
     """
     Implementation of the :py:class:`Common Eye Tracker Interface <.EyeTrackerDevice>`
     for the Pupil Core headset.
@@ -188,11 +188,10 @@ class NeonEyeTracker(EyeTrackerDevice):
         if not self.isConnected():
             return False
 
-        if self._runtime_settings["recording_enabled"]:
-            if should_be_recording:
-                self._device.recording_start()
-            else:
-                self._device.recording_stop_and_save()
+        if should_be_recording:
+            self._device.recording_start()
+        else:
+            self._device.recording_stop_and_save()
 
         self._actively_recording = should_be_recording
 
@@ -278,7 +277,7 @@ class NeonEyeTracker(EyeTrackerDevice):
 
             gaze_in_pix = [
                 surface_gaze.x * self._window_size[0],
-                surface_gaze.y * self._window_size[1]
+                (surface_gaze.y + 1.0) * self._window_size[1]
             ]
 
             gaze_in_display_units = self._eyeTrackerToDisplayCoords(gaze_in_pix)
