@@ -19,7 +19,7 @@ class AprilTagComponent(BaseVisualComponent):
         self.type = 'Image'
         self.url = "https://april.eecs.umich.edu/software/apriltag.html"
         self.exp.requirePsychopyLibs(['visual'])
-        self.exp.requireImport('AprilTagStim', 'psychopy_eyetracker_pupil_labs.pupil_labs')
+        self.exp.requireImport('AprilTagStim', 'psychopy_eyetracker_pupil_labs.pupil_labs.stimuli')
         self.exp.requireImport('convertToPix', 'psychopy.tools.monitorunittools')
 
         self.order += ['marker_id']
