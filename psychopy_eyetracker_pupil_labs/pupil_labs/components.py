@@ -93,7 +93,7 @@ class AprilTagComponent(BaseVisualComponent):
 
         for component in tag_comps:
             inits = getInitVals(component.params, 'PsychoPy')
-            code += "        str({inits[name]}.marker_id): {inits[name]}.get_marker_verts(),\n".format(inits=inits)
+            code += "        str({inits[name]}.marker_id): {inits[name]}.marker_verts,\n".format(inits=inits)
 
         code += "    }\n"
         code += "    win_size_pix = convertToPix(np.array([2, 2]), [0, 0], 'norm', win)\n"

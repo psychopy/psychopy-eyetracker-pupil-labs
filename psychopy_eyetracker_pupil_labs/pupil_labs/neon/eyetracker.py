@@ -4,13 +4,12 @@
 # Distributed under the terms of the GNU General Public License (GPL).
 import logging
 from typing import Optional, Dict, Tuple, Union
-import json
 
 from psychopy.iohub.constants import EyeTrackerConstants
 from psychopy.iohub.devices import Computer, Device
 from psychopy.iohub.devices.eyetracker import EyeTrackerDevice
 from psychopy.iohub.errors import printExceptionDetailsToStdErr
-from psychopy.iohub.constants import EventConstants, EyeTrackerConstants
+from psychopy.iohub.constants import EventConstants
 
 from pupil_labs.realtime_api.simple import Device as CompanionDevice
 from pupil_labs.real_time_screen_gaze.gaze_mapper import GazeMapper
@@ -191,7 +190,11 @@ class EyeTracker(EyeTrackerDevice):
         if should_be_recording:
             self._device.recording_start()
         else:
-            self._device.recording_stop_and_save()
+            try:
+                self._device.recording_stop_and_save()
+            except Exception as exc:
+                logging.error(f"Failed to stop recording: {exc}")
+                printExceptionDetailsToStdErr()
 
         self._actively_recording = should_be_recording
 

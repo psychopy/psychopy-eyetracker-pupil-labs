@@ -19,7 +19,8 @@ class AprilTagStim(ImageStim):
 
         super().__init__(image=marker_data, *args, **kwargs)
 
-    def get_marker_verts(self):
+    @property
+    def marker_verts(self):
         vertices_in_pixels = self._vertices.pix
         size_with_margin = (
             abs(vertices_in_pixels[1][0] - vertices_in_pixels[0][0]),
@@ -83,11 +84,16 @@ class AprilTagFrameStim(ImageStim):
             top_left = [v + marker_padding for v in top_left]
             bottom_right = [v - marker_padding for v in bottom_right]
 
-            self.marker_verts[marker_id] = (
-                top_left,
-                (bottom_right[0], top_left[1]),
-                bottom_right,
+            top_left[0] -= win_size_pix[0] / 2
+            top_left[1] -= win_size_pix[1] / 2
+            bottom_right[0] -= win_size_pix[0] / 2
+            bottom_right[1] -= win_size_pix[1] / 2
+
+            self.marker_verts[str(marker_id)] = (
                 (top_left[0], bottom_right[1]),
+                bottom_right,
+                (bottom_right[0], top_left[1]),
+                top_left,
             )
 
         # Convert to psychopy color space
