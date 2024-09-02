@@ -277,7 +277,7 @@ class EyeTracker(EyeTrackerDevice):
 
             gaze_in_pix = [
                 surface_gaze.x * self._window_size[0],
-                (surface_gaze.y + 1.0) * self._window_size[1]
+                surface_gaze.y * self._window_size[1],
             ]
 
             gaze_in_display_units = self._eyeTrackerToDisplayCoords(gaze_in_pix)
