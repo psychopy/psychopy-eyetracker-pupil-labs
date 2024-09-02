@@ -13,8 +13,8 @@ class AprilTagComponent(BaseVisualComponent):
     _instances = []
     _routine_start_written = False
 
-    def __init__(self, exp, parentName, marker_id=0, anchor="center", *args, **kwargs):
-        super().__init__(exp, parentName, *args, **kwargs)
+    def __init__(self, exp, parentName, marker_id=0, anchor="center", size=(0.2, 0.2), startType='time (s)', startVal=0.0, *args, **kwargs):
+        super().__init__(exp, parentName, size=size, startType=startType, startVal=startVal, *args, **kwargs)
 
         self.type = 'Image'
         self.url = "https://april.eecs.umich.edu/software/apriltag.html"
@@ -109,8 +109,8 @@ class AprilTagFrameComponent(BaseVisualComponent):
     iconFile = Path(__file__).parent.parent / 'apriltag_frame.png'
     tooltip = _translate('AprilTag: Markers to identify a screen surface')
 
-    def __init__(self, exp, parentName, h_count=3, v_count=3, marker_ids='', marker_size=0.125, marker_units="from exp settings", anchor="center", size=[2, 2], units="norm", *args, **kwargs):
-        super().__init__(exp, parentName, size=size, units=units, *args, **kwargs)
+    def __init__(self, exp, parentName, h_count=3, v_count=3, marker_ids='', marker_size=0.125, marker_units="from exp settings", anchor="center", size=[2, 2], units="norm", startType='time (s)', startVal=0.0, *args, **kwargs):
+        super().__init__(exp, parentName, size=size, units=units, startType=startType, startVal=startVal, *args, **kwargs)
 
         self.type = 'Image'
         self.url = "https://april.eecs.umich.edu/software/apriltag.html"
