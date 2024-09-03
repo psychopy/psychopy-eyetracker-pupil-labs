@@ -8,7 +8,7 @@ on:
 jobs:
   mac-tests:
     name: Run tests on Mac
-    runs-on: macos-11
+    runs-on: macos-13
 
     steps:
     - name: Checkout
@@ -18,15 +18,15 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: "3.10"
-    
+
     - name: Install package and dependencies
       run: |
         python3 -m pip install -e .[tests]
-    
+
     - name: Run tests
       run: |
         pytest
-  
+
   windows-tests:
     name: Run tests on Windows
     runs-on: windows-latest
@@ -39,15 +39,15 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: "3.10"
-    
+
     - name: Install package and dependencies
       run: |
         python3 -m pip install -e .[tests]
-    
+
     - name: Run tests
       run: |
         pytest
-    
+
   linux-tests:
     name: Run tests on Linux
     runs-on: ubuntu-latest
@@ -55,12 +55,12 @@ jobs:
     steps:
         - name: Checkout
           uses: actions/checkout@v4
-    
+
         - name: Set up Python
           uses: actions/setup-python@v4
           with:
             python-version: "3.10"
-        
+
         - name: Prepare to build wx
           run: |
             python3 -m pip install wheel six distro attrdict3
@@ -70,11 +70,11 @@ jobs:
             sudo apt-get install -y -qq libwebkit2gtk-4.0-dev
             sudo apt-get install -y -qq libpng-dev libjpeg-dev libtiff-dev libnotify-dev libsm-dev
             sudo apt-get install -y -qq libsdl2-dev libsdl2-mixer-2.0-0 libsdl2-image-2.0-0 libsdl2-2.
-        
+
         - name: Install package and dependencies
           run: |
             python3 -m pip install -e .[tests]
-        
+
         - name: Run tests
           run: |
             pytest
