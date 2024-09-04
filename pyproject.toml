@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "psychopy-eyetracker-pupil-labs"
-version = "0.3.0"
+version = "0.3.1"
 description = "Extension package for PsychoPy which adds support for Pupil Labs eyetrackers."
 readme = "README.md"
 requires-python = ">= 3.7"
@@ -32,7 +32,8 @@ urls.documentation = "https://pages.github.com/psychopy/psychopy-eyetracker-pupi
 urls.repository = "https://github.com/psychopy/psychopy-eyetracker-pupil-labs"
 dependencies = [
   "pupil-labs-realtime-api",
-  "real-time-screen-gaze"
+  "real-time-screen-gaze",
+  "numpy<2",
 ]
 
 [project.optional-dependencies]
