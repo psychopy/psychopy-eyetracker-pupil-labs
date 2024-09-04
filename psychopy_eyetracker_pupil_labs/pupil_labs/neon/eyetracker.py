@@ -388,7 +388,6 @@ class EyeTracker(EyeTrackerDevice):
     def _close(self):
         """Do any final cleanup of the eye tracker before the object is
         destroyed."""
-        self.setRecordingState(False)
         self.setConnectionState(False)
         self.__class__._INSTANCE = None
         super()._close()
