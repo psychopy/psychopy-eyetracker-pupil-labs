@@ -21,6 +21,8 @@ class AprilTagStim(ImageStim):
 
     @property
     def marker_verts(self):
+        win_size_pix = convertToPix(np.array([2, 2]), [0, 0], 'norm', self.win).astype(int)
+
         vertices_in_pixels = self._vertices.pix
         size_with_margin = (
             abs(vertices_in_pixels[1][0] - vertices_in_pixels[0][0]),
@@ -32,8 +34,8 @@ class AprilTagStim(ImageStim):
         top_left_pos = vertices_in_pixels[2]
 
         top_left = (
-            top_left_pos[0] + padding,
-            top_left_pos[1] - padding
+            top_left_pos[0] + padding + win_size_pix[0] / 2,
+            top_left_pos[1] - padding + win_size_pix[1] / 2
         )
         bottom_right = (
             top_left[0] + size_without_margin[0],
@@ -83,11 +85,6 @@ class AprilTagFrameStim(ImageStim):
             # save marker verts for surface registration
             top_left = [v + marker_padding for v in top_left]
             bottom_right = [v - marker_padding for v in bottom_right]
-
-            top_left[0] -= win_size_pix[0] / 2
-            top_left[1] -= win_size_pix[1] / 2
-            bottom_right[0] -= win_size_pix[0] / 2
-            bottom_right[1] -= win_size_pix[1] / 2
 
             self.marker_verts[str(marker_id)] = (
                 (top_left[0], bottom_right[1]),

@@ -277,7 +277,6 @@ class EyeTracker(EyeTrackerDevice):
         frame, gaze = frame_and_gaze
         surface_map = self._gaze_mapper.process_frame(frame, gaze)
         for surface_gaze in surface_map.mapped_gaze[self._screen_surface.uid]:
-
             gaze_in_pix = [
                 surface_gaze.x * self._window_size[0],
                 surface_gaze.y * self._window_size[1],
@@ -365,11 +364,7 @@ class EyeTracker(EyeTrackerDevice):
         self._latest_gaze_position = surface_gaze
 
     def register_surface(self, tag_verts, window_size):
-        corrected_verts = {}
-        for tag_id_str, verts in tag_verts.items():
-            corrected_verts[int(tag_id_str)] = [
-                (vert[0] + window_size[0] / 2, vert[1] + window_size[1] / 2) for vert in verts
-            ]
+        corrected_verts = {int(tag_id): verts for tag_id, verts in tag_verts.items()}
 
         self._gaze_mapper.clear_surfaces()
         self._screen_surface = self._gaze_mapper.add_surface(
