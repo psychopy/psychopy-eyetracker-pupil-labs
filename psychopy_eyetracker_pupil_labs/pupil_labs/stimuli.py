@@ -49,7 +49,7 @@ class AprilTagStim(ImageStim):
 
 
 class AprilTagFrameStim(ImageStim):
-    def __init__(self, h_count=3, v_count=3, marker_ids=None, marker_size=0.125, marker_units='', contrast=1.0, *args, **kwargs):
+    def __init__(self, h_count=4, v_count=3, marker_ids=None, marker_size=0.125, marker_units='', contrast=1.0, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.marker_verts = {}

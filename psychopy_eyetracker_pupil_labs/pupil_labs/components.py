@@ -109,7 +109,7 @@ class AprilTagFrameComponent(BaseVisualComponent):
     iconFile = Path(__file__).parent.parent / 'apriltag_frame.png'
     tooltip = _translate('AprilTag: Markers to identify a screen surface')
 
-    def __init__(self, exp, parentName, h_count=3, v_count=3, marker_ids='', marker_size=0.125, marker_units="from exp settings", anchor="center", size=[2, 2], units="norm", startType='time (s)', startVal=0.0, *args, **kwargs):
+    def __init__(self, exp, parentName, h_count=4, v_count=3, marker_ids='', marker_size=0.125, marker_units="from exp settings", anchor="center", size=[2, 2], units="norm", startType='time (s)', startVal=0.0, *args, **kwargs):
         super().__init__(exp, parentName, size=size, units=units, startType=startType, startVal=startVal, *args, **kwargs)
 
         self.type = 'Image'
