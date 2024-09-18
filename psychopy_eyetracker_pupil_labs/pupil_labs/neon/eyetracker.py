@@ -285,7 +285,6 @@ class EyeTracker(EyeTrackerDevice):
 
         gaze = self._device.receive_gaze_datum(timeout_seconds=0)
         if gaze is not None and hasattr(gaze, 'pupil_diameter_left'):
-            print('add pupil sample')
             self._add_pupil_sample(gaze, logged_time)
 
     def _add_gaze_sample(self, surface_gaze, gaze_datum, logged_time):
@@ -450,6 +449,12 @@ class EyeTracker(EyeTrackerDevice):
         )
 
         self._window_size = window_size
+
+    def send_event(self, event_name, timestamp_ns):
+        if timestamp_ns == 0:
+            timestamp_ns = None
+
+        self._device.send_event(event_name, event_timestamp_unix_ns=timestamp_ns)
 
     def _psychopyTimeInTrackerTime(self, psychopy_time):
         return psychopy_time + self._time_offset_estimate.time_offset_ms.mean / 1000

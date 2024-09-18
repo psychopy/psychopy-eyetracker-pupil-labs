@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from psychopy.experiment.components import BaseVisualComponent, Param, getInitVals
+from psychopy.experiment.components import BaseVisualComponent, BaseComponent, Param, getInitVals
 from psychopy.localization import _translate
 
 
@@ -13,8 +13,8 @@ class AprilTagComponent(BaseVisualComponent):
     _instances = []
     _routine_start_written = False
 
-    def __init__(self, exp, parentName, marker_id=0, anchor="center", size=(0.2, 0.2), startType='time (s)', startVal=0.0, *args, **kwargs):
-        super().__init__(exp, parentName, size=size, startType=startType, startVal=startVal, *args, **kwargs)
+    def __init__(self, exp, parentName, name='aprilTag', marker_id=0, anchor="center", size=(0.2, 0.2), startType='time (s)', startVal=0.0, *args, **kwargs):
+        super().__init__(exp, parentName, name=name, size=size, startType=startType, startVal=startVal, *args, **kwargs)
 
         self.type = 'Image'
         self.url = "https://april.eecs.umich.edu/software/apriltag.html"
@@ -109,8 +109,8 @@ class AprilTagFrameComponent(BaseVisualComponent):
     iconFile = Path(__file__).parent.parent / 'apriltag_frame.png'
     tooltip = _translate('AprilTag: Markers to identify a screen surface')
 
-    def __init__(self, exp, parentName, h_count=4, v_count=3, marker_ids='', marker_size=0.125, marker_units="from exp settings", anchor="center", size=[2, 2], units="norm", startType='time (s)', startVal=0.0, *args, **kwargs):
-        super().__init__(exp, parentName, size=size, units=units, startType=startType, startVal=startVal, *args, **kwargs)
+    def __init__(self, exp, parentName, name='tagFrame', h_count=4, v_count=3, marker_ids='', marker_size=0.125, marker_units="from exp settings", anchor="center", size=[2, 2], units="norm", startType='time (s)', startVal=0.0, *args, **kwargs):
+        super().__init__(exp, parentName, name=name, size=size, units=units, startType=startType, startVal=startVal, *args, **kwargs)
 
         self.type = 'Image'
         self.url = "https://april.eecs.umich.edu/software/apriltag.html"
@@ -208,5 +208,43 @@ class AprilTagFrameComponent(BaseVisualComponent):
         code = (f"if eyetracker is not None and hasattr(eyetracker, 'register_surface'):\n"
                 f"    win_size_pix = convertToPix(np.array([2, 2]), [0, 0], 'norm', win)\n"
                 f"    eyetracker.register_surface({inits['name']}.marker_verts, win_size_pix)\n")
+
+        buff.writeIndentedLines(code)
+
+
+class NeonEventComponent(BaseComponent):
+    targets = ['PsychoPy']
+    categories = ['Eyetracking']
+    iconFile = Path(__file__).parent.parent / 'neon_event.png'
+    tooltip = _translate('Save a timestamped event in a Neon recording')
+
+    def __init__(self, exp, parentName, name='neonEvent', event_name='Event 1', timestamp_ns=0, startType='time (s)', startVal=0.0, stopType='duration (s)', stopVal=1.0, *args, **kwargs):
+        super().__init__(exp, parentName, name=name, startType=startType, startVal=startVal, stopType=stopType, stopVal=stopVal, *args, **kwargs)
+
+        self.url = "https://docs.pupil-labs.com/neon/data-collection/events/"
+        self.exp.requireImport('BasicComponent', 'psychopy_eyetracker_pupil_labs.pupil_labs.stimuli')
+
+        _allow3 = ['constant', 'set every repeat', 'set every frame']  # list
+        self.params['event_name'] = Param(
+            event_name, valType='str', inputType="single", allowedTypes=[], categ='Basic',
+            updates='constant', allowedUpdates=_allow3[:],
+            hint=_translate("The name of the event to be saved"),
+            canBePath=False,
+            label=_translate("Event Name"))
+
+        self.params['timestamp_ns'] = Param(timestamp_ns,
+            valType='int', categ='Basic',
+            updates='constant', allowedUpdates=_allow3[:],
+            hint=_translate("The timestamp of the event or `0` for automatic"),
+            label=_translate("Event timestamp (ns)"))
+
+    def writeInitCode(self, buff):
+        inits = getInitVals(self.params, 'PsychoPy')
+        buff.writeIndentedLines(f"{inits['name']} = BasicComponent()\n")
+
+    def writeRoutineStartCode(self, buff):
+        inits = getInitVals(self.params, 'PsychoPy')
+        code = (f"if eyetracker is not None and hasattr(eyetracker, 'send_event'):\n"
+                f"    eyetracker.send_event({inits['event_name']}, {inits['timestamp_ns']})\n")
 
         buff.writeIndentedLines(code)
