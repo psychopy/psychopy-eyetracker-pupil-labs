@@ -267,24 +267,26 @@ class EyeTracker(EyeTrackerDevice):
         if self._screen_surface is None:
             return
 
+        logged_time = Computer.getTime()
         frame_and_gaze = self._device.receive_matched_scene_video_frame_and_gaze(timeout_seconds=0)
 
-        if frame_and_gaze is None:
-            return
+        if frame_and_gaze is not None:
+            frame, gaze = frame_and_gaze
+            surface_map = self._gaze_mapper.process_frame(frame, gaze)
+            for surface_gaze in surface_map.mapped_gaze[self._screen_surface.uid]:
+                gaze_in_pix = [
+                    surface_gaze.x * self._window_size[0],
+                    surface_gaze.y * self._window_size[1],
+                ]
 
-        logged_time = Computer.getTime()
+                gaze_in_display_units = self._eyeTrackerToDisplayCoords(gaze_in_pix)
 
-        frame, gaze = frame_and_gaze
-        surface_map = self._gaze_mapper.process_frame(frame, gaze)
-        for surface_gaze in surface_map.mapped_gaze[self._screen_surface.uid]:
-            gaze_in_pix = [
-                surface_gaze.x * self._window_size[0],
-                surface_gaze.y * self._window_size[1],
-            ]
+                self._add_gaze_sample(gaze_in_display_units, gaze, logged_time)
 
-            gaze_in_display_units = self._eyeTrackerToDisplayCoords(gaze_in_pix)
-
-            self._add_gaze_sample(gaze_in_display_units, gaze, logged_time)
+        gaze = self._device.receive_gaze_datum(timeout_seconds=0)
+        if gaze is not None and hasattr(gaze, 'pupil_diameter_left'):
+            print('add pupil sample')
+            self._add_pupil_sample(gaze, logged_time)
 
     def _add_gaze_sample(self, surface_gaze, gaze_datum, logged_time):
         native_time = gaze_datum.timestamp_unix_seconds
@@ -338,7 +340,7 @@ class EyeTracker(EyeTrackerDevice):
 
             surface_gaze[0],                # right_gaze_x
             surface_gaze[1],                # right_gaze_y
-            EyeTrackerConstants.UNDEFINED,  # gaze_z,  # right_gaze_z
+            EyeTrackerConstants.UNDEFINED,  # right_gaze_z
             EyeTrackerConstants.UNDEFINED,  # right_eye_cam_x
             EyeTrackerConstants.UNDEFINED,  # right_eye_cam_y
             EyeTrackerConstants.UNDEFINED,  # right_eye_cam_z
@@ -362,6 +364,81 @@ class EyeTracker(EyeTrackerDevice):
 
         self._latest_sample = sample
         self._latest_gaze_position = surface_gaze
+
+    def _add_pupil_sample(self, pupil_datum, logged_time):
+        native_time = pupil_datum.timestamp_unix_seconds
+        iohub_time = self._trackerTimeInPsychopyTime(native_time)
+
+        metadata = {
+            "experiment_id": 0,  # experiment_id, iohub fills in automatically
+            "session_id": 0,     # session_id, iohub fills in automatically
+            "device_id": 0,      # device_id, keep at 0
+            "event_id": Device._getNextEventID(),  # iohub event unique ID
+            "device_time": native_time,
+            "logged_time": logged_time,
+            "time": iohub_time,
+            "confidence_interval": -1.0,
+            "delay": (logged_time - iohub_time),
+            "filter_id": False,
+        }
+
+        sample = [  # BinocularEyeSampleEvent
+            metadata["experiment_id"],
+            metadata["session_id"],
+            metadata["device_id"],
+            metadata["event_id"],
+            EventConstants.BINOCULAR_EYE_SAMPLE,  # type
+            metadata["device_time"],
+            metadata["logged_time"],
+            metadata["time"],
+            metadata["confidence_interval"],
+            metadata["delay"],
+            metadata["filter_id"],
+
+            pupil_datum.optical_axis_left_x,        # left_gaze_x
+            pupil_datum.optical_axis_left_y,        # left_gaze_y
+            pupil_datum.optical_axis_left_z,        # left_gaze_z
+            pupil_datum.eyeball_center_left_x,      # left_eye_cam_x
+            pupil_datum.eyeball_center_left_y,      # left_eye_cam_y
+            pupil_datum.eyeball_center_left_z,      # left_eye_cam_z
+            EyeTrackerConstants.UNDEFINED,          # left_angle_x
+            EyeTrackerConstants.UNDEFINED,          # left_angle_y
+            pupil_datum.x,                          # left_raw_x
+            pupil_datum.y,                          # left_raw_y
+            pupil_datum.pupil_diameter_left,        # left_pupil_measure1
+            EyeTrackerConstants.PUPIL_DIAMETER_MM,  # pupil_measure1_type  # left_pupil_measure1_type
+            EyeTrackerConstants.UNDEFINED,          # left_pupil_measure2
+            EyeTrackerConstants.UNDEFINED,          # pupil_measure2_type  # left_pupil_measure2_type
+            EyeTrackerConstants.UNDEFINED,          # left_ppd_x
+            EyeTrackerConstants.UNDEFINED,          # left_ppd_y
+            EyeTrackerConstants.UNDEFINED,          # left_velocity_x
+            EyeTrackerConstants.UNDEFINED,          # left_velocity_y
+            EyeTrackerConstants.UNDEFINED,          # left_velocity_xy
+
+            pupil_datum.optical_axis_right_x,       # right_gaze_x
+            pupil_datum.optical_axis_right_y,       # right_gaze_y
+            pupil_datum.optical_axis_right_z,       # right_gaze_z
+            pupil_datum.eyeball_center_right_x,     # right_eye_cam_x
+            pupil_datum.eyeball_center_right_y,     # right_eye_cam_y
+            pupil_datum.eyeball_center_right_z,     # right_eye_cam_z
+            EyeTrackerConstants.UNDEFINED,          # right_angle_x
+            EyeTrackerConstants.UNDEFINED,          # right_angle_y
+            pupil_datum.x,                          # right_raw_x
+            pupil_datum.y,                          # right_raw_y
+            pupil_datum.pupil_diameter_right,       # right_pupil_measure1
+            EyeTrackerConstants.PUPIL_DIAMETER_MM,  # pupil_measure1_type  # right_pupil_measure1_type
+            EyeTrackerConstants.UNDEFINED,          # right_pupil_measure2
+            EyeTrackerConstants.UNDEFINED,          # pupil_measure2_type  # right_pupil_measure2_type
+            EyeTrackerConstants.UNDEFINED,          # right_ppd_x
+            EyeTrackerConstants.UNDEFINED,          # right_ppd_y
+            EyeTrackerConstants.UNDEFINED,          # right_velocity_x
+            EyeTrackerConstants.UNDEFINED,          # right_velocity_y
+            EyeTrackerConstants.UNDEFINED,          # right_velocity_xy
+            0,
+        ]
+
+        self._addNativeEventToBuffer(sample)
+        self._latest_sample = sample
 
     def register_surface(self, tag_verts, window_size):
         corrected_verts = {int(tag_id): verts for tag_id, verts in tag_verts.items()}
