@@ -6,6 +6,8 @@ from psychopy.tools.monitorunittools import convertToPix
 
 from pupil_labs.real_time_screen_gaze import marker_generator
 
+from psychopy.tools.attributetools import AttributeGetSetMixin
+
 
 class AprilTagStim(ImageStim):
     def __init__(self, marker_id=0, contrast=1.0, *args, **kwargs):
@@ -124,3 +126,7 @@ class AprilTagFrameStim(ImageStim):
         ])
 
         return spacing * np.array(self._frame_grid(*grid_counts))
+
+
+class BasicComponent(AttributeGetSetMixin):
+    pass
