@@ -121,7 +121,6 @@ class EyeTracker(EyeTrackerDevice):
             self._gaze_mapper = GazeMapper(calibration)
 
             self._time_offset_estimate = self._device.estimate_time_offset()
-            self._device.receive_matched_scene_video_frame_and_gaze()
 
         elif not enable and self._device is not None:
             self._device.close()
