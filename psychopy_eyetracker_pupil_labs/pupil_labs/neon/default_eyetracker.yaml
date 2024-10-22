@@ -27,7 +27,7 @@ eyetracker.neon.EyeTracker:
 
     #####
 
-    monitor_event_types: [BinocularEyeSampleEvent]
+    monitor_event_types: [MonocularEyeSampleEvent, BinocularEyeSampleEvent]
 
     # Should eye tracker events be saved to the ioHub DataStore file when the device
     # is recording data ?

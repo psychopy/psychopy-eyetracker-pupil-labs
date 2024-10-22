@@ -49,6 +49,7 @@ class EyeTracker(EyeTrackerDevice):
     _COMMAND_TO_FUNCTION = {}
 
     EVENT_CLASS_NAMES = [
+        "MonocularEyeSampleEvent",
         "BinocularEyeSampleEvent",
     ]
 
@@ -219,6 +220,7 @@ class EyeTracker(EyeTrackerDevice):
 
     def getLastSample(self) -> Union[
         None,
+        "psychopy.iohub.devices.eyetracker.MonocularEyeSampleEvent",
         "psychopy.iohub.devices.eyetracker.BinocularEyeSampleEvent",
     ]:
         """The getLastSample method returns the most recent eye sample received
@@ -227,8 +229,10 @@ class EyeTracker(EyeTrackerDevice):
 
         :return:
 
+            - MonocularEyeSample:
+                Gaze mapping result
             - BinocularEyeSample:
-                Gaze mapping result from two combined pupil detections
+                Eye state data
             - None:
                 If the eye tracker is not currently recording data.
 
@@ -303,58 +307,38 @@ class EyeTracker(EyeTrackerDevice):
             "filter_id": False,
         }
 
-        sample = [  # BinocularEyeSampleEvent
+        sample = [  # MonocularEyeSampleEvent
             metadata["experiment_id"],
             metadata["session_id"],
             metadata["device_id"],
             metadata["event_id"],
-            EventConstants.BINOCULAR_EYE_SAMPLE,  # type
+            EventConstants.MONOCULAR_EYE_SAMPLE,  # type
             metadata["device_time"],
             metadata["logged_time"],
             metadata["time"],
             metadata["confidence_interval"],
             metadata["delay"],
             metadata["filter_id"],
-
-            surface_gaze[0],                # left_gaze_x
-            surface_gaze[1],                # left_gaze_y
-            EyeTrackerConstants.UNDEFINED,  # left_gaze_z
-            EyeTrackerConstants.UNDEFINED,  # left_eye_cam_x
-            EyeTrackerConstants.UNDEFINED,  # left_eye_cam_y
-            EyeTrackerConstants.UNDEFINED,  # left_eye_cam_z
-            EyeTrackerConstants.UNDEFINED,  # left_angle_x
-            EyeTrackerConstants.UNDEFINED,  # left_angle_y
-            gaze_datum.x,                   # left_raw_x
-            gaze_datum.y,                   # left_raw_y
-            EyeTrackerConstants.UNDEFINED,  # left_pupil_measure1
-            EyeTrackerConstants.UNDEFINED,  # pupil_measure1_type  # left_pupil_measure1_type
-            EyeTrackerConstants.UNDEFINED,  # left_pupil_measure2
-            EyeTrackerConstants.UNDEFINED,  # pupil_measure2_type  # left_pupil_measure2_type
-            EyeTrackerConstants.UNDEFINED,  # left_ppd_x
-            EyeTrackerConstants.UNDEFINED,  # left_ppd_y
-            EyeTrackerConstants.UNDEFINED,  # left_velocity_x
-            EyeTrackerConstants.UNDEFINED,  # left_velocity_y
-            EyeTrackerConstants.UNDEFINED,  # left_velocity_xy
-
-            surface_gaze[0],                # right_gaze_x
-            surface_gaze[1],                # right_gaze_y
-            EyeTrackerConstants.UNDEFINED,  # right_gaze_z
-            EyeTrackerConstants.UNDEFINED,  # right_eye_cam_x
-            EyeTrackerConstants.UNDEFINED,  # right_eye_cam_y
-            EyeTrackerConstants.UNDEFINED,  # right_eye_cam_z
-            EyeTrackerConstants.UNDEFINED,  # right_angle_x
-            EyeTrackerConstants.UNDEFINED,  # right_angle_y
-            gaze_datum.x,                   # right_raw_x
-            gaze_datum.y,                   # right_raw_y
-            EyeTrackerConstants.UNDEFINED,  # right_pupil_measure1
-            EyeTrackerConstants.UNDEFINED,  # pupil_measure1_type  # right_pupil_measure1_type
-            EyeTrackerConstants.UNDEFINED,  # right_pupil_measure2
-            EyeTrackerConstants.UNDEFINED,  # pupil_measure2_type  # right_pupil_measure2_type
-            EyeTrackerConstants.UNDEFINED,  # right_ppd_x
-            EyeTrackerConstants.UNDEFINED,  # right_ppd_y
-            EyeTrackerConstants.UNDEFINED,  # right_velocity_x
-            EyeTrackerConstants.UNDEFINED,  # right_velocity_y
-            EyeTrackerConstants.UNDEFINED,  # right_velocity_xy
+            EyeTrackerConstants.BINOCULAR_CUSTOM,
+            surface_gaze[0],                # gaze_x
+            surface_gaze[1],                # gaze_y
+            EyeTrackerConstants.UNDEFINED,  # gaze_z
+            EyeTrackerConstants.UNDEFINED,  # eye_cam_x
+            EyeTrackerConstants.UNDEFINED,  # eye_cam_y
+            EyeTrackerConstants.UNDEFINED,  # eye_cam_z
+            EyeTrackerConstants.UNDEFINED,  # angle_x
+            EyeTrackerConstants.UNDEFINED,  # angle_y
+            gaze_datum.x,                   # raw_x
+            gaze_datum.y,                   # raw_y
+            EyeTrackerConstants.UNDEFINED,  # pupil_measure1
+            EyeTrackerConstants.UNDEFINED,  # pupil_measure1_type
+            EyeTrackerConstants.UNDEFINED,  # pupil_measure2
+            EyeTrackerConstants.UNDEFINED,  # pupil_measure2_type
+            EyeTrackerConstants.UNDEFINED,  # ppd_x
+            EyeTrackerConstants.UNDEFINED,  # ppd_y
+            EyeTrackerConstants.UNDEFINED,  # velocity_x
+            EyeTrackerConstants.UNDEFINED,  # velocity_y
+            EyeTrackerConstants.UNDEFINED,  # velocity_xy
             0,
         ]
 

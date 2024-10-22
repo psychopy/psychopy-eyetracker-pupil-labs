@@ -49,7 +49,7 @@ eyetracker.hw.pupil_labs.neon.EyeTracker:
 
     monitor_event_types:
         IOHUB_LIST:
-            valid_values: [BinocularEyeSampleEvent]
+            valid_values: [MonocularEyeSampleEvent, BinocularEyeSampleEvent]
             min_length: 1
             max_length: 2
 
