@@ -433,7 +433,7 @@ class EyeTracker(EyeTrackerDevice):
 
         self._window_size = window_size
 
-    def send_event(self, event_name, timestamp_ns):
+    def send_event(self, event_name, timestamp_ns=None):
         if timestamp_ns == 0:
             timestamp_ns = None
 
