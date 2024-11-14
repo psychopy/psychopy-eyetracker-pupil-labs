@@ -59,7 +59,8 @@ class AprilTagFrameStim(ImageStim):
         self.marker_verts = {}
 
         win_size_pix = convertToPix(np.array([2, 2]), [0, 0], 'norm', self.win).astype(int)
-        marker_size_pix = convertToPix(np.array([marker_size, marker_size]), [0, 0], marker_units, self.win).astype(int)
+        marker_size_pix = convertToPix(np.array([0, marker_size]), [0, 0], marker_units, self.win).astype(int)
+        marker_size_pix[0] = marker_size_pix[1]
         marker_padding = marker_size_pix[0] / 10
         image_data = np.zeros((win_size_pix[1], win_size_pix[0], 4))
 

@@ -144,7 +144,7 @@ class AprilTagFrameComponent(BaseVisualComponent):
             updates='constant', allowedTypes=[],
             allowedUpdates=['constant'],
             hint=_translate("The size of each AprilTag marker"),
-            label=_translate("Marker size [w,h]"))
+            label=_translate("Marker size"))
 
         self.params['marker_units'] = Param(marker_units,
             valType='str', inputType="choice", categ='Layout',
