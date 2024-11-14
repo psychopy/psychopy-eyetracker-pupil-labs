@@ -66,6 +66,8 @@ class EyeTracker(EyeTrackerDevice):
         self._screen_surface = None
         self._window_size = None
 
+        self._cached_scene = None
+
         self._gaze_mapper = None
 
         self.setConnectionState(True)
@@ -271,11 +273,13 @@ class EyeTracker(EyeTrackerDevice):
             return
 
         logged_time = Computer.getTime()
-        frame_and_gaze = self._device.receive_matched_scene_video_frame_and_gaze(timeout_seconds=0)
+        scene_data = self._device.receive_scene_video_frame(timeout_seconds=0)
+        if scene_data is not None:
+            self._cached_scene, _ = scene_data
 
-        if frame_and_gaze is not None:
-            frame, gaze = frame_and_gaze
-            surface_map = self._gaze_mapper.process_frame(frame, gaze)
+        gaze = self._device.receive_gaze_datum(timeout_seconds=0)
+        if gaze is not None and self._cached_scene is not None:
+            surface_map = self._gaze_mapper.process_frame(self._cached_scene, gaze)
             for surface_gaze in surface_map.mapped_gaze[self._screen_surface.uid]:
                 gaze_in_pix = [
                     surface_gaze.x * self._window_size[0],
@@ -283,12 +287,10 @@ class EyeTracker(EyeTrackerDevice):
                 ]
 
                 gaze_in_display_units = self._eyeTrackerToDisplayCoords(gaze_in_pix)
-
                 self._add_gaze_sample(gaze_in_display_units, gaze, logged_time)
 
-        gaze = self._device.receive_gaze_datum(timeout_seconds=0)
-        if gaze is not None and hasattr(gaze, 'pupil_diameter_left'):
-            self._add_pupil_sample(gaze, logged_time)
+            if hasattr(gaze, 'pupil_diameter_left'):
+                self._add_pupil_sample(gaze, logged_time)
 
     def _add_gaze_sample(self, surface_gaze, gaze_datum, logged_time):
         native_time = gaze_datum.timestamp_unix_seconds
