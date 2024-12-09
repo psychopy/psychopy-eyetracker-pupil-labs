@@ -466,7 +466,6 @@ def bg_gaze_mapper(host, port, input_queue, output_queue):
     async_mapper = AsyncQueueMapper(host, port, input_queue, output_queue)
     asyncio.run(async_mapper.run_tasks())
 
-
 class AsyncQueueMapper:
     def __init__(self, host, port, input_queue, output_queue):
         self.host = host
@@ -543,8 +542,7 @@ class AsyncQueueMapper:
             if self.stop_event.is_set():
                 break
 
-            bgr_buffer = frame.bgr_buffer()
-            self.gaze_mapper.process_scene(bgr_buffer)
+            self.gaze_mapper.process_scene(frame)
 
     async def receive_and_queue_gaze_data(self, status):
         sensor_gaze = status.direct_gaze_sensor()
