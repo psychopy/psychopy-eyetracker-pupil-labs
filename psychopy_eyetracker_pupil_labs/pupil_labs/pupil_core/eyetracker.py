@@ -199,7 +199,7 @@ class EyeTracker(EyeTrackerDevice):
 
         :param calibration_args: This argument will be ignored and has only been added
             for the purpose of compatibility with the Common Eye Tracker Interface
-        
+
         :return:
             - :py:attr:`.EyeTrackerConstants.EYETRACKER_OK`
                 if the calibration was succesful
@@ -358,7 +358,7 @@ class EyeTracker(EyeTrackerDevice):
                     )
             if (
                 topic.startswith("pupil")
-                and payload["confidence"] < self._confidence_threshold
+                and payload["confidence"] >= self._confidence_threshold
             ):
                 self._add_pupil_sample(pupil_datum=payload, logged_time=logged_time)
 
