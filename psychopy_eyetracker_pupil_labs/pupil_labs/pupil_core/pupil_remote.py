@@ -41,9 +41,18 @@ class PupilRemote:
         self._zmq_req_socket.send_string("SUB_PORT")
         if self._zmq_req_socket.poll(timeout=timeout_ms, flags=zmq.POLLIN) == 0:
             raise TimeoutError("Could not connect to Pupil Capture")
+
         sub_port = self._zmq_req_socket.recv_string()
         self._zmq_sub_socket = self._zmq_ctx.socket(zmq.SUB)
         self._zmq_sub_socket.connect(f"tcp://{ip_address}:{sub_port}")
+
+        self._zmq_req_socket.send_string("PUB_PORT")
+        if self._zmq_req_socket.poll(timeout=timeout_ms, flags=zmq.POLLIN) == 0:
+            raise TimeoutError("Could not connect to Pupil Capture")
+
+        pub_port = self._zmq_req_socket.recv_string()
+        self._zmq_pub_socket = self._zmq_ctx.socket(zmq.PUB)
+        self._zmq_pub_socket.connect(f"tcp://{ip_address}:{pub_port}")
 
         # Subscribe to IPC Backbone notification topics
         for topic in subscription_topics:
@@ -101,6 +110,17 @@ class PupilRemote:
         self._zmq_req_socket.send_string(f"T {pupil_time}")
         logger.debug(self._zmq_req_socket.recv_string())
 
+    def send_event(self, label: str, timestamp: float):
+        annotation = {
+            "topic": "annotation",
+            "label": label,
+            "timestamp": timestamp,
+            "duration": 0,
+        }
+        payload = msgpack.dumps(annotation, use_bin_type=True)
+        self._zmq_pub_socket.send_string(annotation["topic"], flags=zmq.SNDMORE)
+        self._zmq_pub_socket.send(payload)
+
     def get_pupil_time(self):
         """Uses an existing Pupil Core software connection to request the remote time.
         Returns the current "pupil time" at the timepoint of reception.
@@ -129,6 +149,7 @@ class PupilRemote:
     def cleanup(self):
         self._zmq_req_socket.close()
         self._zmq_sub_socket.close()
+        self._zmq_pub_socket.close()
 
     @property
     def has_new_data(self):

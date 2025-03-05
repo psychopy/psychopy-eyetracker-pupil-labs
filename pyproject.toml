@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "psychopy-eyetracker-pupil-labs"
-version = "0.6.3"
+version = "0.7.0"
 description = "Extension package for PsychoPy which adds support for Pupil Labs eyetrackers."
 readme = "README.md"
 requires-python = ">= 3.7"
@@ -62,4 +62,4 @@ pupil_core = "psychopy_eyetracker_pupil_labs.pupil_labs.pupil_core"
 [project.entry-points."psychopy.experiment.components"]
 AprilTagComponent = "psychopy_eyetracker_pupil_labs.pupil_labs.components:AprilTagComponent"
 AprilTagFrameComponent = "psychopy_eyetracker_pupil_labs.pupil_labs.components:AprilTagFrameComponent"
-NeonEventComponent = "psychopy_eyetracker_pupil_labs.pupil_labs.components:NeonEventComponent"
+PLEventComponent = "psychopy_eyetracker_pupil_labs.pupil_labs.components:PLEventComponent"

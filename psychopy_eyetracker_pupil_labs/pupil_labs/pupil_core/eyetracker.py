@@ -335,6 +335,12 @@ class EyeTracker(EyeTrackerDevice):
         """
         return self._latest_gaze_position
 
+    def send_event(self, label, timestamp_ns=None):
+        if timestamp_ns not in [None, 0]:
+            logger.warning("Custom timestamps are not supported for Pupil Core events.")
+
+        self._pupil_remote.send_event(label, self.trackerTime())
+
     def _poll(self):
         if not self.isConnected():
             return
