@@ -13,7 +13,12 @@ class AprilTagComponent(BaseVisualComponent):
     _instances = []
     _routine_start_written = False
 
-    def __init__(self, exp, parentName, name='aprilTag', marker_id=0, anchor="center", size=(0.2, 0.2), startType='time (s)', startVal=0.0, *args, **kwargs):
+    def __init__(
+        self, exp, parentName, name='aprilTag',
+        marker_id=0, anchor="center", size=(0.2, 0.2),
+        startType='time (s)', startVal=0.0,
+        *args, **kwargs
+    ):
         super().__init__(exp, parentName, name=name, size=size, startType=startType, startVal=startVal, *args, **kwargs)
 
         self.type = 'Image'
@@ -24,7 +29,8 @@ class AprilTagComponent(BaseVisualComponent):
 
         self.order += ['marker_id']
 
-        self.params['marker_id'] = Param(marker_id,
+        self.params['marker_id'] = Param(
+            marker_id,
             valType='int', inputType="spin", categ='Basic',
             updates='constant', allowedVals=[0, 512],
             allowedUpdates=['constant', 'set every repeat', 'set every frame'],
@@ -34,16 +40,17 @@ class AprilTagComponent(BaseVisualComponent):
 
         self.params['anchor'] = Param(
             anchor, valType='str', inputType="choice", categ='Layout',
-            allowedVals=['center',
-                        'top-center',
-                        'bottom-center',
-                        'center-left',
-                        'center-right',
-                        'top-left',
-                        'top-right',
-                        'bottom-left',
-                        'bottom-right',
-                        ],
+            allowedVals=[
+                'center',
+                'top-center',
+                'bottom-center',
+                'center-left',
+                'center-right',
+                'top-left',
+                'top-right',
+                'bottom-left',
+                'bottom-right',
+            ],
             updates='constant',
             hint=_translate("Which point on the stimulus should be anchored to its exact position?"),
             label=_translate("Anchor")
@@ -109,8 +116,19 @@ class AprilTagFrameComponent(BaseVisualComponent):
     iconFile = Path(__file__).parent.parent / 'apriltag_frame.png'
     tooltip = _translate('AprilTag: Markers to identify a screen surface')
 
-    def __init__(self, exp, parentName, name='tagFrame', h_count=4, v_count=3, marker_ids='', marker_size=0.125, marker_units="from exp settings", anchor="center", size=[2, 2], units="norm", startType='time (s)', startVal=0.0, *args, **kwargs):
-        super().__init__(exp, parentName, name=name, size=size, units=units, startType=startType, startVal=startVal, *args, **kwargs)
+    def __init__(
+        self, exp, parentName,
+        name='tagFrame', h_count=4, v_count=3, marker_ids='',
+        marker_size=0.125, marker_units="from exp settings",
+        anchor="center", size=[2, 2], units="norm",
+        startType='time (s)', startVal=0.0,
+        *args, **kwargs
+    ):
+        super().__init__(
+            exp, parentName, name=name,
+            size=size, units=units, startType=startType, startVal=startVal,
+            *args, **kwargs
+        )
 
         self.type = 'Image'
         self.url = "https://april.eecs.umich.edu/software/apriltag.html"
@@ -118,35 +136,40 @@ class AprilTagFrameComponent(BaseVisualComponent):
         self.exp.requireImport('AprilTagFrameStim', 'psychopy_eyetracker_pupil_labs.pupil_labs.stimuli')
         self.exp.requireImport('convertToPix', 'psychopy.tools.monitorunittools')
 
-        self.params['h_count'] = Param(h_count,
+        self.params['h_count'] = Param(
+            h_count,
             valType='int', inputType="spin", categ='Basic',
             updates='constant', allowedVals=[0, 64],
             allowedUpdates=['constant'],
             hint=_translate("The number of AprilTag markers to display along the horizontal edges of the display"),
             label=_translate("Horizontal Count"))
 
-        self.params['v_count'] = Param(v_count,
+        self.params['v_count'] = Param(
+            v_count,
             valType='int', inputType="spin", categ='Basic',
             updates='constant', allowedVals=[0, 64],
             allowedUpdates=['constant'],
             hint=_translate("The number of AprilTag markers to display along the vertical edges of the display"),
             label=_translate("Vertical Count"))
 
-        self.params['marker_ids'] = Param(marker_ids,
+        self.params['marker_ids'] = Param(
+            marker_ids,
             valType='str', categ='Basic',
             updates='constant',
             allowedUpdates=['constant'],
             hint=_translate("The IDs of the AprilTag marker to display"),
             label=_translate("Marker IDs"))
 
-        self.params['marker_size'] = Param(marker_size,
+        self.params['marker_size'] = Param(
+            marker_size,
             valType='int', inputType="single", categ='Layout',
             updates='constant', allowedTypes=[],
             allowedUpdates=['constant'],
             hint=_translate("The size of each AprilTag marker"),
             label=_translate("Marker size"))
 
-        self.params['marker_units'] = Param(marker_units,
+        self.params['marker_units'] = Param(
+            marker_units,
             valType='str', inputType="choice", categ='Layout',
             allowedVals=['from exp settings', 'deg', 'cm', 'pix', 'norm',
                          'height', 'degFlatPos', 'degFlat'],
@@ -155,16 +178,17 @@ class AprilTagFrameComponent(BaseVisualComponent):
 
         self.params['anchor'] = Param(
             anchor, valType='str', inputType="choice", categ='Layout',
-            allowedVals=['center',
-                        'top-center',
-                        'bottom-center',
-                        'center-left',
-                        'center-right',
-                        'top-left',
-                        'top-right',
-                        'bottom-left',
-                        'bottom-right',
-                        ],
+            allowedVals=[
+                'center',
+                'top-center',
+                'bottom-center',
+                'center-left',
+                'center-right',
+                'top-left',
+                'top-right',
+                'bottom-left',
+                'bottom-right',
+            ],
             updates='constant',
             hint=_translate("Which point on the stimulus should be anchored to its exact position?"),
             label=_translate("Anchor"))
@@ -218,8 +242,20 @@ class NeonEventComponent(BaseComponent):
     iconFile = Path(__file__).parent.parent / 'neon_event.png'
     tooltip = _translate('Save a timestamped event in a Neon recording')
 
-    def __init__(self, exp, parentName, name='neonEvent', event_name='Event 1', timestamp_ns=0, startType='time (s)', startVal=0.0, stopType='duration (s)', stopVal=1.0, *args, **kwargs):
-        super().__init__(exp, parentName, name=name, startType=startType, startVal=startVal, stopType=stopType, stopVal=stopVal, *args, **kwargs)
+    def __init__(
+        self, exp, parentName,
+        name='neonEvent', event_name='Event 1',
+        timestamp_ns=0,
+        startType='time (s)', startVal=0.0,
+        stopType='duration (s)', stopVal=1.0,
+        *args, **kwargs
+    ):
+        super().__init__(
+            exp, parentName, name=name,
+            startType=startType, startVal=startVal,
+            stopType=stopType, stopVal=stopVal,
+            *args, **kwargs
+        )
 
         self.url = "https://docs.pupil-labs.com/neon/data-collection/events/"
         self.exp.requireImport('EventEntity', 'psychopy_eyetracker_pupil_labs.pupil_labs.stimuli')
@@ -232,7 +268,8 @@ class NeonEventComponent(BaseComponent):
             canBePath=False,
             label=_translate("Event Name"))
 
-        self.params['timestamp_ns'] = Param(timestamp_ns,
+        self.params['timestamp_ns'] = Param(
+            timestamp_ns,
             valType='int', categ='Basic',
             updates='constant', allowedUpdates=_allow3[:],
             hint=_translate("The timestamp of the event or `0` for automatic"),
