@@ -222,7 +222,7 @@ class NeonEventComponent(BaseComponent):
         super().__init__(exp, parentName, name=name, startType=startType, startVal=startVal, stopType=stopType, stopVal=stopVal, *args, **kwargs)
 
         self.url = "https://docs.pupil-labs.com/neon/data-collection/events/"
-        self.exp.requireImport('BasicComponent', 'psychopy_eyetracker_pupil_labs.pupil_labs.stimuli')
+        self.exp.requireImport('EventEntity', 'psychopy_eyetracker_pupil_labs.pupil_labs.stimuli')
 
         _allow3 = ['constant', 'set every repeat', 'set every frame']  # list
         self.params['event_name'] = Param(
@@ -240,11 +240,24 @@ class NeonEventComponent(BaseComponent):
 
     def writeInitCode(self, buff):
         inits = getInitVals(self.params, 'PsychoPy')
-        buff.writeIndentedLines(f"{inits['name']} = BasicComponent()\n")
+        buff.writeIndentedLines(f"{inits['name']} = EventEntity()\n")
 
-    def writeRoutineStartCode(self, buff):
+    def writeFrameCode(self, buff):
+        """Write the code that will be called every frame
+        """
         inits = getInitVals(self.params, 'PsychoPy')
-        code = (f"if eyetracker is not None and hasattr(eyetracker, 'send_event'):\n"
-                f"    eyetracker.send_event({inits['event_name']}, {inits['timestamp_ns']})\n")
 
-        buff.writeIndentedLines(code)
+        buff.writeIndented("\n")
+        buff.writeIndentedLines("# *%s* updates\n" % self.params['name'])
+
+        indented = self.writeStartTestCode(buff)
+        if indented:
+            # write code to start
+            code = (
+                f"if eyetracker is not None and hasattr(eyetracker, 'send_event'):\n"
+                f"    eyetracker.send_event({inits['event_name']}, {inits['timestamp_ns']})\n"
+            )
+            buff.writeIndentedLines(code % self.params)
+
+        # Dedent
+        buff.setIndentLevel(-indented, relative=True)

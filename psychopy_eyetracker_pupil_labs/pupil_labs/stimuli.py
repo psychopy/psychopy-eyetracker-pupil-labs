@@ -1,12 +1,12 @@
 import numpy as np
 import cv2
 
-from psychopy.visual import ImageStim
+from psychopy.constants import NOT_STARTED
 from psychopy.tools.monitorunittools import convertToPix
+from psychopy.tools.attributetools import AttributeGetSetMixin
+from psychopy.visual import ImageStim
 
 from pupil_labs.real_time_screen_gaze import marker_generator
-
-from psychopy.tools.attributetools import AttributeGetSetMixin
 
 
 class AprilTagStim(ImageStim):
@@ -129,5 +129,6 @@ class AprilTagFrameStim(ImageStim):
         return spacing * np.array(self._frame_grid(*grid_counts))
 
 
-class BasicComponent(AttributeGetSetMixin):
-    pass
+class EventEntity(AttributeGetSetMixin):
+    def __init__(self):
+        self.status = NOT_STARTED
