@@ -270,6 +270,8 @@ class EyeTracker(EyeTrackerDevice):
             self._latest_sample = None
             self._latest_gaze_position = None
 
+        self._pupil_remote.update_psychopy_pupil_clock_offset()
+
         return EyeTrackerDevice.enableEventReporting(self, self._actively_recording)
 
     def isRecordingEnabled(self) -> bool:
