@@ -236,7 +236,7 @@ class AprilTagFrameComponent(BaseVisualComponent):
         buff.writeIndentedLines(code)
 
 
-class NeonEventComponent(BaseComponent):
+class PLEventComponent(BaseComponent):
     targets = ['PsychoPy']
     categories = ['Eyetracking']
     iconFile = Path(__file__).parent.parent / 'neon_event.png'
@@ -244,7 +244,7 @@ class NeonEventComponent(BaseComponent):
 
     def __init__(
         self, exp, parentName,
-        name='neonEvent', event_name='Event 1',
+        name='plEvent', event_name='Event 1',
         timestamp_ns=0,
         startType='time (s)', startVal=0.0,
         stopType='duration (s)', stopVal=1.0,
