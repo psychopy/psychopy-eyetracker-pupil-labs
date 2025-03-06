@@ -419,13 +419,17 @@ class EyeTracker(EyeTrackerDevice):
         self.mapper_process_command_queue.put(SurfaceMessage(tag_verts, window_size))
 
     def send_event(self, event_name, timestamp_ns=None):
+        if timestamp_ns in [0, None]:
+            timestamp_ns = self._psychopyTimeInTrackerTime(Computer.getTime())
+
         self.mapper_process_command_queue.put(EventMessage(event_name, timestamp_ns))
 
     def _psychopyTimeInTrackerTime(self, psychopy_time):
-        return psychopy_time + self._time_offset_estimate.time_offset_ms.mean / 1000
+        t_ms = (Computer.global_clock.getLastResetTime() + psychopy_time) * 1e3 - self._time_offset_estimate.time_offset_ms.mean
+        return t_ms * 1e6
 
     def _trackerTimeInPsychopyTime(self, tracker_time):
-        return tracker_time - self._time_offset_estimate.time_offset_ms.mean / 1000
+        return tracker_time / 1e9 - Computer.global_clock.getLastResetTime() + self._time_offset_estimate.time_offset_ms.mean / 1000
 
     def _close(self):
         """Do any final cleanup of the eye tracker before the object is
