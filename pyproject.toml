@@ -59,6 +59,10 @@ where = ["", "psychopy_eyetracker_pupil_labs",]
 neon = "psychopy_eyetracker_pupil_labs.pupil_labs.neon"
 pupil_core = "psychopy_eyetracker_pupil_labs.pupil_labs.pupil_core"
 
+[project.entry-points."psychopy.experiment.components.settings.eyetracking"]
+PupilLabsCoreEyetrackerBackend = "psychopy_eyetracker_pupil_labs.pupil_labs.pupil_core.settings:PupilLabsCoreEyetrackerBackend"
+PupilLabsNeonEyetrackerBackend = "psychopy_eyetracker_pupil_labs.pupil_labs.neon.settings:PupilLabsNeonEyetrackerBackend"
+
 [project.entry-points."psychopy.experiment.components"]
 AprilTagComponent = "psychopy_eyetracker_pupil_labs.pupil_labs.components:AprilTagComponent"
 AprilTagFrameComponent = "psychopy_eyetracker_pupil_labs.pupil_labs.components:AprilTagFrameComponent"
