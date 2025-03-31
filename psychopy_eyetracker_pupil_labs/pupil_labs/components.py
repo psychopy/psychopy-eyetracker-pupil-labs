@@ -206,7 +206,7 @@ class AprilTagFrameComponent(BaseVisualComponent):
             marker_count = 2 * (int(inits['h_count'].val) + int(inits['v_count'].val)) - 4
             marker_ids = list(range(marker_count))
         else:
-            marker_ids = [v.strip() for v in inits['marker_ids'].val.split(',')]
+            marker_ids = [int(v.strip()) for v in inits['marker_ids'].val.split(',')]
 
         if inits['marker_units'].val == 'from exp settings':
             marker_units = self.exp.settings.params['Units']

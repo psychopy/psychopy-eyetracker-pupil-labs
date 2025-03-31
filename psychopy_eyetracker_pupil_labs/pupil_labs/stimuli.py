@@ -73,7 +73,7 @@ class AprilTagFrameStim(ImageStim):
         self.marker_ids = marker_ids
 
         for marker_id, position_pix in zip(marker_ids, marker_positions_pix):
-            marker_data = marker_generator.generate_marker(marker_id, flip_x=True)
+            marker_data = marker_generator.generate_marker(int(marker_id), flip_x=True)
             marker_data = np.pad(marker_data, pad_width=1, mode="constant", constant_values=255)
             marker_data = cv2.cvtColor(marker_data.astype(np.float32), cv2.COLOR_GRAY2RGBA)
             marker_data[:, :, 3] = 255
