@@ -33,7 +33,7 @@ class AprilTagComponent(BaseVisualComponent):
             marker_id,
             valType='int', inputType="spin", categ='Basic',
             updates='constant', allowedVals=[0, 512],
-            allowedUpdates=['constant', 'set every repeat', 'set every frame'],
+            allowedUpdates=['constant'],
             hint=_translate("The ID of the AprilTag marker to display"),
             label=_translate("Marker ID")
         )
@@ -55,6 +55,10 @@ class AprilTagComponent(BaseVisualComponent):
             hint=_translate("Which point on the stimulus should be anchored to its exact position?"),
             label=_translate("Anchor")
         )
+
+        self.params['size'].allowedUpdates = ['constant']
+        self.params['pos'].allowedUpdates = ['constant']
+        self.params['units'].allowedUpdates = ['constant']
 
         del self.params['color']
         del self.params['colorSpace']
@@ -193,6 +197,10 @@ class AprilTagFrameComponent(BaseVisualComponent):
             hint=_translate("Which point on the stimulus should be anchored to its exact position?"),
             label=_translate("Anchor"))
 
+        self.params['size'].allowedUpdates = ['constant']
+        self.params['pos'].allowedUpdates = ['constant']
+        self.params['units'].allowedUpdates = ['constant']
+
         del self.params['color']
         del self.params['colorSpace']
         del self.params['fillColor']
@@ -277,24 +285,25 @@ class PLEventComponent(BaseComponent):
 
     def writeInitCode(self, buff):
         inits = getInitVals(self.params, 'PsychoPy')
-        buff.writeIndentedLines(f"{inits['name']} = EventEntity()\n")
+        buff.writeIndentedLines(
+            "%(name)s = EventEntity('%(name)s', %(event_name)s, %(timestamp_ns)s)" % inits
+        )
 
     def writeFrameCode(self, buff):
         """Write the code that will be called every frame
         """
-        inits = getInitVals(self.params, 'PsychoPy')
+        params = self.params.copy()
 
         buff.writeIndented("\n")
         buff.writeIndentedLines("# *%s* updates\n" % self.params['name'])
 
+        if self.checkNeedToUpdate('set every frame'):
+            self.writeParamUpdates(buff, 'set every frame')
+
         indented = self.writeStartTestCode(buff)
         if indented:
-            # write code to start
-            code = (
-                f"if eyetracker is not None and hasattr(eyetracker, 'send_event'):\n"
-                f"    eyetracker.send_event({inits['event_name']}, {inits['timestamp_ns']})\n"
-            )
-            buff.writeIndentedLines(code % self.params)
+            code = "%(name)s.trigger(eyetracker)" % params
+            buff.writeIndentedLines(code)
 
         # Dedent
         buff.setIndentLevel(-indented, relative=True)

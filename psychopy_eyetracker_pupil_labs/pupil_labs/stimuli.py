@@ -3,7 +3,7 @@ import cv2
 
 from psychopy.constants import NOT_STARTED
 from psychopy.tools.monitorunittools import convertToPix
-from psychopy.tools.attributetools import AttributeGetSetMixin
+from psychopy.tools.attributetools import AttributeGetSetMixin, attributeSetter, setAttribute
 from psychopy.visual import ImageStim
 
 from pupil_labs.real_time_screen_gaze import marker_generator
@@ -130,5 +130,33 @@ class AprilTagFrameStim(ImageStim):
 
 
 class EventEntity(AttributeGetSetMixin):
-    def __init__(self):
+    def __init__(self, name, event_name, timestamp_ns, autolog=True):
         self.status = NOT_STARTED
+
+        if name not in (None, ''):
+            self.__dict__['name'] = name
+        else:
+            self.__dict__['name'] = 'unnamed %s' % self.__class__.__name__
+
+        self.__dict__['event_name'] = event_name
+        self.__dict__['timestamp_ns'] = timestamp_ns
+
+        self.autoLog = autolog
+
+    def trigger(self, eyetracker):
+        if eyetracker is not None and hasattr(eyetracker, 'send_event'):
+            eyetracker.send_event(self.event_name, self.timestamp_ns)
+
+    @attributeSetter
+    def event_name(self, event_name):
+        self.__dict__['event_name'] = event_name
+
+    def setEvent_name(self, event_name=None, log=None):
+        setAttribute(self, 'event_name', event_name, log)
+
+    @attributeSetter
+    def timestamp_ns(self, timestamp_ns):
+        self.__dict__['timestamp_ns'] = timestamp_ns
+
+    def setTimestamp_ns(self, timestamp_ns=None, log=None):
+        setAttribute(self, 'timestamp_ns', timestamp_ns, log)

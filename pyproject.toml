@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "psychopy-eyetracker-pupil-labs"
-version = "0.7.4"
+version = "0.7.5"
 description = "Extension package for PsychoPy which adds support for Pupil Labs eyetrackers."
 readme = "README.md"
 requires-python = ">= 3.7"
