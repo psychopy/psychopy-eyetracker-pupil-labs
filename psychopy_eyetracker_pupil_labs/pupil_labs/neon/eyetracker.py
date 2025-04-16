@@ -2,13 +2,13 @@
 # Part of the PsychoPy library
 # Copyright (C) 2012-2020 iSolver Software Solutions (C) 2021 Open Science Tools Ltd.
 # Distributed under the terms of the GNU General Public License (GPL).
-import logging
 import time
 from typing import Optional, Dict, Tuple, Union
 from dataclasses import dataclass
 import multiprocessing as mp
 import asyncio
 
+from psychopy import logging
 from psychopy.iohub.constants import EyeTrackerConstants
 from psychopy.iohub.devices import Computer, Device
 from psychopy.iohub.devices.eyetracker import EyeTrackerDevice
@@ -282,6 +282,8 @@ class EyeTracker(EyeTrackerDevice):
 
             elif isinstance(message, TimeOffsetMessage):
                 self._time_offset_estimate = message.offset_value
+                mean_ms = self._time_offset_estimate.time_offset_ms.mean
+                logging.info(f"Received clock offset estimate: {mean_ms}ms")
 
     def _add_gaze_sample(self, surface_gaze, gaze_datum, logged_time):
         native_time = gaze_datum.timestamp_unix_seconds
@@ -424,12 +426,23 @@ class EyeTracker(EyeTrackerDevice):
 
         self.mapper_process_command_queue.put(EventMessage(event_name, timestamp_ns))
 
+    def _psychopyClockOffset(self):
+        t1 = time.time()
+        psychopy_time = Computer.getTime()
+        t2 = time.time()
+        computer_time = (t1 + t2) / 2.0
+
+        return computer_time - psychopy_time
+
     def _psychopyTimeInTrackerTime(self, psychopy_time):
-        t_ms = (Computer.global_clock._epochTimeAtLastReset + psychopy_time) * 1e3 - self._time_offset_estimate.time_offset_ms.mean
-        return t_ms * 1e6
+        psychopy_offset = self._psychopyClockOffset()
+        computer_time = psychopy_time + psychopy_offset
+        return computer_time + self._time_offset_estimate.time_offset_ms.mean / 1e3
 
     def _trackerTimeInPsychopyTime(self, tracker_time):
-        return tracker_time / 1e9 - Computer.global_clock._epochTimeAtLastReset + self._time_offset_estimate.time_offset_ms.mean / 1000
+        psychopy_offset = self._psychopyClockOffset()
+        computer_time = (tracker_time + self._time_offset_estimate.time_offset_ms.mean / 1e3)
+        return computer_time - psychopy_offset
 
     def _close(self):
         """Do any final cleanup of the eye tracker before the object is
