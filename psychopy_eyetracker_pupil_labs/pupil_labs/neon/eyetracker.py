@@ -422,7 +422,7 @@ class EyeTracker(EyeTrackerDevice):
 
     def send_event(self, event_name, timestamp_ns=None):
         if timestamp_ns in [0, None]:
-            timestamp_ns = self._psychopyTimeInTrackerTime(Computer.getTime())
+            timestamp_ns = self._psychopyTimeInTrackerTime(Computer.getTime()) * 1e9
 
         self.mapper_process_command_queue.put(EventMessage(event_name, timestamp_ns))
 
@@ -522,10 +522,14 @@ class AsyncQueueMapper:
                 message = self.input_queue.get()
 
                 if isinstance(message, EventMessage):
-                    await self.device.send_event(
-                        message.event_name,
-                        event_timestamp_unix_ns=message.timestamp_ns
-                    )
+                    try:
+                        await self.device.send_event(
+                            message.event_name,
+                            event_timestamp_unix_ns=message.timestamp_ns
+                        )
+                    except Exception as exc:
+                        logging.error(f"Failed to send event '{message.event_name}': {exc}")
+                        printExceptionDetailsToStdErr()
 
                 elif isinstance(message, StopMessage):
                     self.stop_event.set()
