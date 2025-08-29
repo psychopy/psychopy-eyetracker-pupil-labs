@@ -437,7 +437,7 @@ class EyeTracker(EyeTrackerDevice):
     def _psychopyTimeInTrackerTime(self, psychopy_time):
         psychopy_offset = self._psychopyClockOffset()
         computer_time = psychopy_time + psychopy_offset
-        return computer_time + self._time_offset_estimate.time_offset_ms.mean / 1e3
+        return computer_time - self._time_offset_estimate.time_offset_ms.mean / 1e3
 
     def _trackerTimeInPsychopyTime(self, tracker_time):
         psychopy_offset = self._psychopyClockOffset()
@@ -505,16 +505,20 @@ class AsyncQueueMapper:
 
         status = await self.device.get_status()
 
-        estimator = TimeOffsetEstimator(self.host, status.phone.time_echo_port)
-        estimated_offset = await estimator.estimate()
-
-        self.output_queue.put(TimeOffsetMessage(estimated_offset))
-
         await asyncio.gather(
             self.check_input_queue(),
             self.receive_and_queue_scene_data(status),
-            self.receive_and_queue_gaze_data(status)
+            self.receive_and_queue_gaze_data(status),
+            self.offset_estimator_loop(status),
         )
+
+    async def offset_estimator_loop(self, status):
+        while not self.stop_event.is_set():
+            estimator = TimeOffsetEstimator(self.host, status.phone.time_echo_port)
+            estimated_offset = await estimator.estimate()
+
+            self.output_queue.put(TimeOffsetMessage(estimated_offset))
+            await asyncio.sleep(30)
 
     async def check_input_queue(self):
         while not self.stop_event.is_set():
