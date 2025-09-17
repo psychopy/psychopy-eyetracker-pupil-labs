@@ -25,21 +25,21 @@ class PupilLabsNeonEyetrackerBackend(EyetrackerBackend):
         params = {}
         params['plCompanionAddress'] = Param(
             "neon.local",   # default value
-            valType='str', 
+            valType='str',
             inputType="single",
             hint=_translate("Address to connect to."),
-            label=_translate("Companion Address"), 
+            label=_translate("Companion Address"),
             categ="Eyetracking"
         )
         params['plCompanionPort'] = Param(
             "8080",  # default value
-            valType='str', 
+            valType='str',
             inputType="single",
             hint=_translate("Port number to connect to."),
-            label=_translate("Companion Port"), 
+            label=_translate("Companion Port"),
             categ="Eyetracking"
         )
-        
+
         return params, order
 
     @classmethod
@@ -48,8 +48,8 @@ class PupilLabsNeonEyetrackerBackend(EyetrackerBackend):
             "ioConfig[%(eyetracker)s] = {\n"
             "    'name': 'tracker',\n"
             "    'runtime_settings': {\n"
-            "       'companion_address': %(plRemoteAddress)s,\n"
-            "       'companion_port': %(plRemotePort)s,\n"
+            "       'companion_address': %(plCompanionAddress)s,\n"
+            "       'companion_port': %(plCompanionPort)s,\n"
             "    },\n"
             "}\n"
         )
