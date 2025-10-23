@@ -5,5 +5,4 @@
 
 from psychopy.iohub.devices.eyetracker.eye_events import MonocularEyeSampleEvent, BinocularEyeSampleEvent
 from .eyetracker import EyeTracker
-
-__all__ = ["EyeTracker", "MonocularEyeSampleEvent", "BinocularEyeSampleEvent"]
+from . import eyetracker, settings
