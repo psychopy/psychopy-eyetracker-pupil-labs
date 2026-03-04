@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Pupil Labs - Neon &#8212; PsychoPy Eyetracker PupilLabs Plugin 0.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=536c50fe" />
+    <link rel="stylesheet" type="text/css" href="../../_static/psychopy.css?v=6c31395e" />
+    <script src="../../_static/documentation_options.js?v=d20be8f5"></script>
+    <script src="../../_static/doctools.js?v=b682be12"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/jquery-1.11.0.min.js"></script>
+    <script src="../../_static/js/jquery-fix.js"></script>
+    <script src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script src="../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="prev" title="Pupil Labs - Core" href="../core/" />
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-96LHQFPY1F"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-96LHQFPY1F');
+    </script>
+
+    <!-- News reel -->
+     <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // get all news reels
+        for (let reel of document.getElementsByClassName("news-reel")) {
+          // get all cards
+          let cards = Array.from(reel.getElementsByClassName("sd-card"))
+          // start off with the first card
+          reel.showItem = 0;
+          // define function to show the next node
+          let update = () => {
+            for (let item of cards) {
+              // get index
+              let index = cards.indexOf(item);
+              // show/hide according to index match
+              if (index === reel.showItem) {
+                console.log("Showing news item:", item)
+                item.style.display = "block";
+              } else {
+                item.style.display = "none";
+              }
+            }
+            // iterate shown index
+            reel.showItem += 1;
+            if (reel.showItem >= cards.length) {
+              reel.showItem -= cards.length;
+            }
+          }
+          // run once now
+          update()
+          // schedule to run every 5s
+          window.setInterval(update, 5000);
+        }
+      }, false);    
+     </script>
+
+    <!-- Matomo -->
+    <script>
+      var _paq = window._paq = window._paq || [];
+      /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+      _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
+      _paq.push(["setCookieDomain", "*.psychopy.org"]);
+      _paq.push(["setDomains", ["*.psychopy.org","*.discourse.psychopy.org"]]);
+      _paq.push(['trackPageView']);
+      _paq.push(['enableLinkTracking']);
+      (function() {
+        var u="//analytics.opensciencetools.org/";
+        _paq.push(['setTrackerUrl', u+'matomo.php']);
+        _paq.push(['setSiteId', '3']);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+        g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+      })();
+    </script>
+    <noscript><p><img src="//analytics.opensciencetools.org/matomo.php?idsite=3&amp;rec=1" style="border:0;" alt="" /></p></noscript>
+    <!-- End Matomo Code -->
+
+
+  </head><body>
+  
+    <!-- nav bar -->
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top" height="65px">
+    <div class="container">
+      <!-- brand logo -->
+      <a class="navbar-brand" href="../../">
+        
+        <img src="../../_static/navbar_plugin.png" alt="PsychoPy Logo">
+        
+      </a>
+      <!-- gap between logo and links -->
+      <div style="flex-grow: 1;"></div>
+      <!-- nav links -->
+      <div class="collapse navbar-collapse nav-collapse w-100 pull-right">
+        <ul class="nav navbar-nav ml-auto">
+          
+          
+            
+<!-- insert a regular link -->
+<li>
+    <a href="../../download/">
+        Install
+    </a>
+</li>
+
+
+          
+          
+          
+          <li><a href="https://plugins.psychopy.org/directory.html" class="return-btn">plugins.psychopy.org</a></li>
+          
+        </ul>
+      </div>
+      <!-- shown when screen is too small for full links, clicking it toggles links shown -->
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+  </div>
+
+<!--
+
+   -->
+
+<!-- social media icon bar -->
+
+<div class="social-bar">
+
+<a href="https://github.com/psychopy/psychopy" class="github">
+    <i class="fab fa-github"></i>
+</a>
+
+<a href="https://bsky.app/profile/psychopy.org" class="bluesky">
+    <i class="fab fa-bluesky"></i>
+</a>
+
+<a href="https://www.youtube.com/watch?v=VV6qhuQgsiI&list=PLFB5A1BE51964D587" class="youtube">
+    <i class="fab fa-youtube"></i>
+</a>
+
+<a href="https://www.facebook.com/PsychoPy/" class="facebook">
+    <i class="fab fa-facebook"></i>
+</a>
+
+<a href="https://www.linkedin.com/company/open-science-tools" class="linkedin">
+    <i class="fab fa-linkedin"></i>
+</a>
+
+<a href="https://twitter.com/psychopy" class="twitter">
+    <i class="fab fa-x-twitter"></i>
+</a>
+
+</div>
+
+  
+
+<main>
+  
+  <section id="pupil-labs-neon">
+<span id="id1"></span><h1><a class="toc-backref" href="#id8" role="doc-backlink">Pupil Labs - Neon</a><a class="headerlink" href="#pupil-labs-neon" title="Link to this heading">¶</a></h1>
+<nav class="contents" id="table-of-contents">
+<p class="topic-title">Table of Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#pupil-labs-neon" id="id8">Pupil Labs - Neon</a></p>
+<ul>
+<li><p><a class="reference internal" href="#high-level-neon-introduction" id="id9">High Level Neon Introduction</a></p></li>
+<li><p><a class="reference internal" href="#device-software-and-connection-setup" id="id10">Device, Software, and Connection Setup</a></p>
+<ul>
+<li><p><a class="reference internal" href="#setting-up-the-eye-tracker" id="id11">Setting Up the Eye Tracker</a></p></li>
+<li><p><a class="reference internal" href="#setting-up-psychopy" id="id12">Setting Up |PsychoPy|</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#implementation-and-api-overview" id="id13">Implementation and API Overview</a></p>
+<ul>
+<li><p><a class="reference internal" href="#eyetracker-class" id="id14">EyeTracker Class</a></p></li>
+<li><p><a class="reference internal" href="#supported-event-types" id="id15">Supported Event Types</a></p>
+<ul>
+<li><p><a class="reference internal" href="#default-device-settings" id="id16">Default Device Settings</a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+<section id="high-level-neon-introduction">
+<h2><a class="toc-backref" href="#id9" role="doc-backlink">High Level Neon Introduction</a><a class="headerlink" href="#high-level-neon-introduction" title="Link to this heading">¶</a></h2>
+<p><a class="reference external" href="https://pupil-labs.com/products/neon/">Neon</a> is a calibration-free, wearable eye tracker.
+The system consists of two inward-facing eye cameras and one forward-facing world camera
+mounted on a wearable eyeglasses-like frame.</p>
+<p>Neon provides gaze data in its world camera’s field of view, regardless of the wearer’s
+head position. As such, gaze can be analysed with the wearer looking and moving freely
+in their environment.</p>
+<p>Neon is unlike remote eye trackers which employ cameras mounted on or near a computer monitor.
+They provide gaze in screen-based coordinates, and this facilitates closed-loop analyses of
+gaze based on the known position of stimuli on-screen and eye gaze direction.</p>
+<p>To use Neon for screen-based work in <a href="#id2"><span class="problematic" id="id3">|PsychoPy|</span></a>, the screen needs to be robustly located within
+the world camera’s field of view, and Neon’s gaze data subsequently transformed from world
+camera-based coordinates to screen-based coordinates. This is achieved with the use of
+<a class="reference external" href="https://docs.pupil-labs.com/core/software/pupil-capture/#markers">AprilTag Markers</a>.</p>
+<a class="reference internal image-reference" href="https://raw.githubusercontent.com/wiki/pupil-labs/pupil/media/images/JAN_quarterfront_left_white.png"><img alt="Neon in the &quot;Just Act Natural&quot; frame" class="align-center" src="https://raw.githubusercontent.com/wiki/pupil-labs/pupil/media/images/JAN_quarterfront_left_white.png" style="width: 700px;" />
+</a>
+<p>For a detailed overview of wearable <em>vs</em> remote eye trackers, check out
+<a class="reference external" href="https://pupil-labs.com/blog/news/what-is-eye-tracking/">this Pupil Labs blog post</a>.</p>
+<p>Join the Pupil Labs <a class="reference external" href="https://pupil-labs.com/chat">Discord community</a> to share
+your research and/or questions.</p>
+</section>
+<section id="device-software-and-connection-setup">
+<h2><a class="toc-backref" href="#id10" role="doc-backlink">Device, Software, and Connection Setup</a><a class="headerlink" href="#device-software-and-connection-setup" title="Link to this heading">¶</a></h2>
+<section id="setting-up-the-eye-tracker">
+<h3><a class="toc-backref" href="#id11" role="doc-backlink">Setting Up the Eye Tracker</a><a class="headerlink" href="#setting-up-the-eye-tracker" title="Link to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p>Follow <a class="reference external" href="https://docs.pupil-labs.com/neon/#getting-started">Neon’s Getting Started
+guide</a> to setup
+the headset and companion device.</p></li>
+</ol>
+</section>
+<section id="setting-up-psychopy">
+<h3><a class="toc-backref" href="#id12" role="doc-backlink">Setting Up <a href="#id4"><span class="problematic" id="id5">|PsychoPy|</span></a></a><a class="headerlink" href="#setting-up-psychopy" title="Link to this heading">¶</a></h3>
+<ol class="arabic">
+<li><p>Install the <code class="docutils literal notranslate"><span class="pre">Pupil</span> <span class="pre">Labs</span></code> plugin using the Plugin Manager and restart Builder.</p></li>
+<li><p>Open <code class="docutils literal notranslate"><span class="pre">experiment</span> <span class="pre">settings</span></code> in the Builder Window (cog icon in top panel)</p></li>
+<li><p>Open the <code class="docutils literal notranslate"><span class="pre">Eyetracking</span></code> tab</p></li>
+<li><p>Modify the properties as follows:</p>
+<ul class="simple">
+<li><p>Select <code class="docutils literal notranslate"><span class="pre">Pupil</span> <span class="pre">Labs</span> <span class="pre">(Neon)</span></code> from the <code class="docutils literal notranslate"><span class="pre">Eyetracker</span> <span class="pre">Device</span></code> drop down menu</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Companion</span> <span class="pre">address</span></code> / <code class="docutils literal notranslate"><span class="pre">Companion</span> <span class="pre">port</span></code> - Defines how to connect to
+the Companion Device. These values can be found in the Neon Companion app by clicking the
+<code class="docutils literal notranslate"><span class="pre">Stream</span></code> button in the top-left corner of the app.</p></li>
+</ul>
+<blockquote>
+<div><video controls src="https://raw.githubusercontent.com/wiki/pupil-labs/psychopy-eyetracker-pupil-labs/images/companion-stream-info.mp4" width="240" height="536"/></div></blockquote>
+</li>
+<li><p>Add AprilTag components to the routines that require eyetracking.
+-  The <code class="docutils literal notranslate"><span class="pre">April</span> <span class="pre">Tag</span> <span class="pre">Frame</span></code> component provides an easy way to add an array of AprilTag markers around the edges of the display.
+-  If the <code class="docutils literal notranslate"><span class="pre">April</span> <span class="pre">Tag</span> <span class="pre">Frame</span></code> is not workable (for example, you need to render a stimulus in the corner of the display), advanced marker placement is possible using individual <code class="docutils literal notranslate"><span class="pre">April</span> <span class="pre">Tag</span></code> components.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Three markers is generally considered a bare minimum, but more markers will yield more robust detection and more accurate mapping.</p></li>
+<li><p>All markers which are displayed simultaneously must each use a unique marker ID.</p></li>
+<li><p>Markers can be placed anywhere on the screen as long as they are fully visible and do not overlap.</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ol>
+<p>A <a class="reference external" href="https://github.com/pupil-labs/psychopy-gaze-contingent-demo">sample experiment</a> is available for reference.</p>
+</section>
+</section>
+<section id="implementation-and-api-overview">
+<h2><a class="toc-backref" href="#id13" role="doc-backlink">Implementation and API Overview</a><a class="headerlink" href="#implementation-and-api-overview" title="Link to this heading">¶</a></h2>
+<section id="eyetracker-class">
+<h3><a class="toc-backref" href="#id14" role="doc-backlink">EyeTracker Class</a><a class="headerlink" href="#eyetracker-class" title="Link to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="psychopy.iohub.devices.eyetracker.hw.pupil_labs.neon.EyeTracker">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">psychopy.iohub.devices.eyetracker.hw.pupil_labs.neon.</span></span><span class="sig-name descname"><span class="pre">EyeTracker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psychopy_eyetracker_pupil_labs/pupil_labs/neon/eyetracker/#EyeTracker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psychopy.iohub.devices.eyetracker.hw.pupil_labs.neon.EyeTracker" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">EyeTrackerDevice</span></code></p>
+<p>Implementation of the <code class="xref py py-class docutils literal notranslate"><span class="pre">Common</span> <span class="pre">Eye</span> <span class="pre">Tracker</span> <span class="pre">Interface</span></code>
+for the Pupil Core headset.</p>
+<p>Uses ioHub’s polling method to process data from <a class="reference external" href="https://docs.pupil-labs.com/developer/core/network-api/">Pupil Capture’s Network API</a>.</p>
+<p>To synchronize time between Pupil Capture and PsychoPy, the integration estimates
+the offset between their clocks and applies it to the incoming data. This step
+effectively transforms time between the two softwares while taking the transmission
+delay into account. For details, see this <a class="reference external" href="https://github.com/pupil-labs/pupil-helpers/blob/master/python/simple_realtime_time_sync.py">real-time time-sync tutorial</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Only <strong>one</strong> instance of EyeTracker can be created within an experiment.
+Attempting to create &gt; 1 instance will raise an exception.</p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="psychopy.iohub.devices.eyetracker.hw.pupil_labs.neon.EyeTracker.getLastGazePosition">
+<span class="sig-name descname"><span class="pre">getLastGazePosition</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/psychopy_eyetracker_pupil_labs/pupil_labs/neon/eyetracker/#EyeTracker.getLastGazePosition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psychopy.iohub.devices.eyetracker.hw.pupil_labs.neon.EyeTracker.getLastGazePosition" title="Link to this definition">¶</a></dt>
+<dd><p>The getLastGazePosition method returns the most recent eye gaze
+position received from the Eye Tracker. This is the position on the
+calibrated 2D surface that the eye tracker is reporting as the current
+eye position. The units are in the units in use by the ioHub Display
+device.</p>
+<p>If binocular recording is being performed, the average position of both
+eyes is returned.</p>
+<p>If no samples have been received from the eye tracker, or the
+eye tracker is not currently recording data, None is returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><dl class="simple">
+<dt>None:</dt><dd><p>If the eye tracker is not currently recording data or no eye samples
+have been received.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>tuple:</dt><dd><p>Latest (gaze_x,gaze_y) position of the eye(s)</p>
+</dd>
+</dl>
+</li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="psychopy.iohub.devices.eyetracker.hw.pupil_labs.neon.EyeTracker.getLastSample">
+<span class="sig-name descname"><span class="pre">getLastSample</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#psychopy.iohub.devices.eyetracker.MonocularEyeSampleEvent" title="psychopy.iohub.devices.eyetracker.MonocularEyeSampleEvent"><span class="pre">psychopy.iohub.devices.eyetracker.MonocularEyeSampleEvent</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#psychopy.iohub.devices.eyetracker.BinocularEyeSampleEvent" title="psychopy.iohub.devices.eyetracker.BinocularEyeSampleEvent"><span class="pre">psychopy.iohub.devices.eyetracker.BinocularEyeSampleEvent</span></a></span></span><a class="reference internal" href="../../_modules/psychopy_eyetracker_pupil_labs/pupil_labs/neon/eyetracker/#EyeTracker.getLastSample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psychopy.iohub.devices.eyetracker.hw.pupil_labs.neon.EyeTracker.getLastSample" title="Link to this definition">¶</a></dt>
+<dd><p>The getLastSample method returns the most recent eye sample received
+from the Eye Tracker. The Eye Tracker must be in a recording state for
+a sample event to be returned, otherwise None is returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><dl class="simple">
+<dt>MonocularEyeSample:</dt><dd><p>Gaze mapping result</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>BinocularEyeSample:</dt><dd><p>Eye state data</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>None:</dt><dd><p>If the eye tracker is not currently recording data.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="psychopy.iohub.devices.eyetracker.hw.pupil_labs.neon.EyeTracker.isConnected">
+<span class="sig-name descname"><span class="pre">isConnected</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../../_modules/psychopy_eyetracker_pupil_labs/pupil_labs/neon/eyetracker/#EyeTracker.isConnected"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psychopy.iohub.devices.eyetracker.hw.pupil_labs.neon.EyeTracker.isConnected" title="Link to this definition">¶</a></dt>
+<dd><p>isConnected returns whether the ioHub EyeTracker Device is connected
+to Pupil Capture or not. A Pupil Core headset must be connected and working
+properly for any of the Common Eye Tracker Interface functionality to work.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>None</strong></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool:  True = the eye tracking hardware is connected. False otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="psychopy.iohub.devices.eyetracker.hw.pupil_labs.neon.EyeTracker.isRecordingEnabled">
+<span class="sig-name descname"><span class="pre">isRecordingEnabled</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../../_modules/psychopy_eyetracker_pupil_labs/pupil_labs/neon/eyetracker/#EyeTracker.isRecordingEnabled"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psychopy.iohub.devices.eyetracker.hw.pupil_labs.neon.EyeTracker.isRecordingEnabled" title="Link to this definition">¶</a></dt>
+<dd><p>The isRecordingEnabled method indicates if the eye tracker device is
+currently recording data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> == the device is recording data; <code class="docutils literal notranslate"><span class="pre">False</span></code> == Recording is not
+occurring</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="psychopy.iohub.devices.eyetracker.hw.pupil_labs.neon.EyeTracker.setConnectionState">
+<span class="sig-name descname"><span class="pre">setConnectionState</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/psychopy_eyetracker_pupil_labs/pupil_labs/neon/eyetracker/#EyeTracker.setConnectionState"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psychopy.iohub.devices.eyetracker.hw.pupil_labs.neon.EyeTracker.setConnectionState" title="Link to this definition">¶</a></dt>
+<dd><p>setConnectionState either connects (<code class="docutils literal notranslate"><span class="pre">setConnectionState(True)</span></code>) or
+disables (<code class="docutils literal notranslate"><span class="pre">setConnectionState(False)</span></code>) active communication between the
+ioHub and Pupil Capture.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A connection to the Eye Tracker is automatically established
+when the ioHub Process is initialized (based on the device settings
+in the iohub_config.yaml), so there is no need to
+explicitly call this method in the experiment script.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Connecting an Eye Tracker to the ioHub does <strong>not</strong> necessarily collect and
+send eye sample data to the ioHub Process. To start actual data collection,
+use the Eye Tracker method <code class="docutils literal notranslate"><span class="pre">setRecordingState(bool)</span></code> or the ioHub Device
+method (device type independent) <code class="docutils literal notranslate"><span class="pre">enableEventRecording(bool)</span></code>.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>enable</strong> (<em>bool</em>) – True = enable the connection, False = disable the connection.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool: indicates the current connection state to the eye tracking hardware.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="psychopy.iohub.devices.eyetracker.hw.pupil_labs.neon.EyeTracker.setRecordingState">
+<span class="sig-name descname"><span class="pre">setRecordingState</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">should_be_recording</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../../_modules/psychopy_eyetracker_pupil_labs/pupil_labs/neon/eyetracker/#EyeTracker.setRecordingState"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psychopy.iohub.devices.eyetracker.hw.pupil_labs.neon.EyeTracker.setRecordingState" title="Link to this definition">¶</a></dt>
+<dd><p>The setRecordingState method is used to start or stop the recording
+and transmission of eye data from the eye tracking device to the ioHub
+Process.</p>
+<p>If the <code class="docutils literal notranslate"><span class="pre">pupil_capture_recording.enabled</span></code> runtime setting is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>,
+a corresponding raw recording within Pupil Capture will be started or stopped.</p>
+<p><code class="docutils literal notranslate"><span class="pre">should_be_recording</span></code> will also be passed to
+<code class="xref py py-func docutils literal notranslate"><span class="pre">EyeTrackerDevice.enableEventReporting()</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>recording</strong> (<em>bool</em>) – if True, the eye tracker will start recordng data.;
+false = stop recording data.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool: the current recording state of the eye tracking device</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="psychopy.iohub.devices.eyetracker.hw.pupil_labs.neon.EyeTracker.trackerSec">
+<span class="sig-name descname"><span class="pre">trackerSec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../../_modules/psychopy_eyetracker_pupil_labs/pupil_labs/neon/eyetracker/#EyeTracker.trackerSec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psychopy.iohub.devices.eyetracker.hw.pupil_labs.neon.EyeTracker.trackerSec" title="Link to this definition">¶</a></dt>
+<dd><p>Returns <code class="xref py py-func docutils literal notranslate"><span class="pre">EyeTracker.trackerTime()</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The eye tracker hardware’s reported current time in sec.msec-usec format.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="psychopy.iohub.devices.eyetracker.hw.pupil_labs.neon.EyeTracker.trackerTime">
+<span class="sig-name descname"><span class="pre">trackerTime</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../../_modules/psychopy_eyetracker_pupil_labs/pupil_labs/neon/eyetracker/#EyeTracker.trackerTime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psychopy.iohub.devices.eyetracker.hw.pupil_labs.neon.EyeTracker.trackerTime" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the current time reported by the eye tracker device.</p>
+<p>Implementation measures the current time in PsychoPy time and applies the
+estimated clock offset to transform the measurement into tracker time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The eye tracker hardware’s reported current time.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="supported-event-types">
+<h3><a class="toc-backref" href="#id15" role="doc-backlink">Supported Event Types</a><a class="headerlink" href="#supported-event-types" title="Link to this heading">¶</a></h3>
+<p>The Neon–<a href="#id6"><span class="problematic" id="id7">|PsychoPy|</span></a> integration provides real-time access to <a class="reference internal" href="#psychopy.iohub.devices.eyetracker.MonocularEyeSampleEvent" title="psychopy.iohub.devices.eyetracker.MonocularEyeSampleEvent"><code class="xref py py-class docutils literal notranslate"><span class="pre">MonocularEyeSampleEvent</span></code></a> events for gaze data.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="psychopy.iohub.devices.eyetracker.MonocularEyeSampleEvent">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">psychopy.iohub.devices.eyetracker.</span></span><span class="sig-name descname"><span class="pre">MonocularEyeSampleEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psychopy/iohub/devices/eyetracker/eye_events/#MonocularEyeSampleEvent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psychopy.iohub.devices.eyetracker.MonocularEyeSampleEvent" title="Link to this definition">¶</a></dt>
+<dd><p>A MonocularEyeSampleEvent represents the eye position and eye attribute
+data collected from one frame or reading of an eye tracker device that is
+recoding from only one eye, or is recording from both eyes and averaging
+the binocular data.</p>
+<p>Event Type ID: EventConstants.MONOCULAR_EYE_SAMPLE</p>
+<p>Event Type String: ‘MONOCULAR_EYE_SAMPLE’</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psychopy.iohub.devices.eyetracker.MonocularEyeSampleEvent.device_time">
+<span class="sig-name descname"><span class="pre">device_time</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#psychopy.iohub.devices.eyetracker.MonocularEyeSampleEvent.device_time" title="Link to this definition">¶</a></dt>
+<dd><p>time of gaze measurement, in sec.msec format, using Pupil Capture clock</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psychopy.iohub.devices.eyetracker.MonocularEyeSampleEvent.logged_time">
+<span class="sig-name descname"><span class="pre">logged_time</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#psychopy.iohub.devices.eyetracker.MonocularEyeSampleEvent.logged_time" title="Link to this definition">¶</a></dt>
+<dd><p>time at which the sample was received in PsychoPy, in sec.msec format, using
+PsychoPy clock</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psychopy.iohub.devices.eyetracker.MonocularEyeSampleEvent.time">
+<span class="sig-name descname"><span class="pre">time</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#psychopy.iohub.devices.eyetracker.MonocularEyeSampleEvent.time" title="Link to this definition">¶</a></dt>
+<dd><p>time of gaze measurement, in sec.msec format, using PsychoPy clock</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psychopy.iohub.devices.eyetracker.MonocularEyeSampleEvent.delay">
+<span class="sig-name descname"><span class="pre">delay</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#psychopy.iohub.devices.eyetracker.MonocularEyeSampleEvent.delay" title="Link to this definition">¶</a></dt>
+<dd><p>The difference between <code class="docutils literal notranslate"><span class="pre">logged_time</span></code> and <code class="docutils literal notranslate"><span class="pre">time</span></code>, in sec.msec format</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psychopy.iohub.devices.eyetracker.MonocularEyeSampleEvent.gaze_x">
+<span class="sig-name descname"><span class="pre">gaze_x</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#psychopy.iohub.devices.eyetracker.MonocularEyeSampleEvent.gaze_x" title="Link to this definition">¶</a></dt>
+<dd><ul class="simple">
+<li><p>x component of gaze location in display coordinates.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psychopy.iohub.devices.eyetracker.MonocularEyeSampleEvent.gaze_y">
+<span class="sig-name descname"><span class="pre">gaze_y</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#psychopy.iohub.devices.eyetracker.MonocularEyeSampleEvent.gaze_y" title="Link to this definition">¶</a></dt>
+<dd><p>y component of gaze location in display coordinates.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p>Eye state data, if enabled, is provided through <a class="reference internal" href="#psychopy.iohub.devices.eyetracker.BinocularEyeSampleEvent" title="psychopy.iohub.devices.eyetracker.BinocularEyeSampleEvent"><code class="xref py py-class docutils literal notranslate"><span class="pre">BinocularEyeSampleEvent</span></code></a> events.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="psychopy.iohub.devices.eyetracker.BinocularEyeSampleEvent">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">psychopy.iohub.devices.eyetracker.</span></span><span class="sig-name descname"><span class="pre">BinocularEyeSampleEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psychopy/iohub/devices/eyetracker/eye_events/#BinocularEyeSampleEvent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psychopy.iohub.devices.eyetracker.BinocularEyeSampleEvent" title="Link to this definition">¶</a></dt>
+<dd><p>The BinocularEyeSampleEvent event represents the eye position and eye
+attribute data collected from one frame or reading of an eye tracker device
+that is recording both eyes of a participant.</p>
+<p>Event Type ID: EventConstants.BINOCULAR_EYE_SAMPLE</p>
+<p>Event Type String: ‘BINOCULAR_EYE_SAMPLE’</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psychopy.iohub.devices.eyetracker.BinocularEyeSampleEvent.device_time">
+<span class="sig-name descname"><span class="pre">device_time</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#psychopy.iohub.devices.eyetracker.BinocularEyeSampleEvent.device_time" title="Link to this definition">¶</a></dt>
+<dd><p>time of eye state measurement, in sec.msec format, using Pupil Capture clock</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psychopy.iohub.devices.eyetracker.BinocularEyeSampleEvent.logged_time">
+<span class="sig-name descname"><span class="pre">logged_time</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#psychopy.iohub.devices.eyetracker.BinocularEyeSampleEvent.logged_time" title="Link to this definition">¶</a></dt>
+<dd><p>time at which the sample was received in PsychoPy, in sec.msec format, using PsychoPy clock</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psychopy.iohub.devices.eyetracker.BinocularEyeSampleEvent.time">
+<span class="sig-name descname"><span class="pre">time</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#psychopy.iohub.devices.eyetracker.BinocularEyeSampleEvent.time" title="Link to this definition">¶</a></dt>
+<dd><p>time of eye state measurement, in sec.msec format, using PsychoPy clock</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psychopy.iohub.devices.eyetracker.BinocularEyeSampleEvent.delay">
+<span class="sig-name descname"><span class="pre">delay</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#psychopy.iohub.devices.eyetracker.BinocularEyeSampleEvent.delay" title="Link to this definition">¶</a></dt>
+<dd><p>The difference between <code class="docutils literal notranslate"><span class="pre">logged_time</span></code> and <code class="docutils literal notranslate"><span class="pre">time</span></code>, in sec.msec format</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psychopy.iohub.devices.eyetracker.BinocularEyeSampleEvent.left_eye_cam_x">
+<span class="sig-name descname"><span class="pre">left_eye_cam_x</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#psychopy.iohub.devices.eyetracker.BinocularEyeSampleEvent.left_eye_cam_x" title="Link to this definition">¶</a></dt>
+<dd><ul class="simple">
+<li><p>x component of left eye’s position relative to the scene camera</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psychopy.iohub.devices.eyetracker.BinocularEyeSampleEvent.left_eye_cam_y">
+<span class="sig-name descname"><span class="pre">left_eye_cam_y</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#psychopy.iohub.devices.eyetracker.BinocularEyeSampleEvent.left_eye_cam_y" title="Link to this definition">¶</a></dt>
+<dd><ul class="simple">
+<li><p>y component of left eye’s position relative to the scene camera</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psychopy.iohub.devices.eyetracker.BinocularEyeSampleEvent.left_eye_cam_z">
+<span class="sig-name descname"><span class="pre">left_eye_cam_z</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#psychopy.iohub.devices.eyetracker.BinocularEyeSampleEvent.left_eye_cam_z" title="Link to this definition">¶</a></dt>
+<dd><ul class="simple">
+<li><p>z component of left eye’s position relative to the scene camera</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psychopy.iohub.devices.eyetracker.BinocularEyeSampleEvent.left_gaze_x">
+<span class="sig-name descname"><span class="pre">left_gaze_x</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#psychopy.iohub.devices.eyetracker.BinocularEyeSampleEvent.left_gaze_x" title="Link to this definition">¶</a></dt>
+<dd><ul class="simple">
+<li><p>x component of left eye’s optical axis vector</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psychopy.iohub.devices.eyetracker.BinocularEyeSampleEvent.left_gaze_y">
+<span class="sig-name descname"><span class="pre">left_gaze_y</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#psychopy.iohub.devices.eyetracker.BinocularEyeSampleEvent.left_gaze_y" title="Link to this definition">¶</a></dt>
+<dd><ul class="simple">
+<li><p>y component of left eye’s optical axis vector</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psychopy.iohub.devices.eyetracker.BinocularEyeSampleEvent.left_gaze_z">
+<span class="sig-name descname"><span class="pre">left_gaze_z</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#psychopy.iohub.devices.eyetracker.BinocularEyeSampleEvent.left_gaze_z" title="Link to this definition">¶</a></dt>
+<dd><ul class="simple">
+<li><p>z component of left eye’s optical axis vector</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psychopy.iohub.devices.eyetracker.BinocularEyeSampleEvent.left_pupil_measure1">
+<span class="sig-name descname"><span class="pre">left_pupil_measure1</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#psychopy.iohub.devices.eyetracker.BinocularEyeSampleEvent.left_pupil_measure1" title="Link to this definition">¶</a></dt>
+<dd><ul class="simple">
+<li><p>left eye pupil diameter in mm</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psychopy.iohub.devices.eyetracker.BinocularEyeSampleEvent.right_gaze_x">
+<span class="sig-name descname"><span class="pre">right_gaze_x</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#psychopy.iohub.devices.eyetracker.BinocularEyeSampleEvent.right_gaze_x" title="Link to this definition">¶</a></dt>
+<dd><ul class="simple">
+<li><p>x component of right eye’s optical axis vector</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psychopy.iohub.devices.eyetracker.BinocularEyeSampleEvent.right_gaze_y">
+<span class="sig-name descname"><span class="pre">right_gaze_y</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#psychopy.iohub.devices.eyetracker.BinocularEyeSampleEvent.right_gaze_y" title="Link to this definition">¶</a></dt>
+<dd><ul class="simple">
+<li><p>y component of right eye’s optical axis vector</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psychopy.iohub.devices.eyetracker.BinocularEyeSampleEvent.right_gaze_z">
+<span class="sig-name descname"><span class="pre">right_gaze_z</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#psychopy.iohub.devices.eyetracker.BinocularEyeSampleEvent.right_gaze_z" title="Link to this definition">¶</a></dt>
+<dd><ul class="simple">
+<li><p>z component of right eye’s optical axis vector</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psychopy.iohub.devices.eyetracker.BinocularEyeSampleEvent.right_pupil_measure1">
+<span class="sig-name descname"><span class="pre">right_pupil_measure1</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#psychopy.iohub.devices.eyetracker.BinocularEyeSampleEvent.right_pupil_measure1" title="Link to this definition">¶</a></dt>
+<dd><ul class="simple">
+<li><p>right eye pupil diameter in mm</p></li>
+</ul>
+</dd></dl>
+
+</dd></dl>
+
+<section id="default-device-settings">
+<h4><a class="toc-backref" href="#id16" role="doc-backlink">Default Device Settings</a><a class="headerlink" href="#default-device-settings" title="Link to this heading">¶</a></h4>
+<p><strong>Last Updated:</strong> October, 2024</p>
+</section>
+</section>
+</section>
+</section>
+
+
+</div>
+<div class="col-md-12 content">
+  <br/><a href="#" class="pull-right">Back to top</a>
+</div>
+<footer class="footer">
+  <div class="container">
+    <span class="pull-right">
+      
+        
+<div id="sourcelink">
+  <a href="https://github.com/psychopy/psychopy/blob/master/docs/source/coder/neon.rst"
+     rel="nofollow">Source</a>
+</div>
+      <br/>
+
+          &copy; 2002-2018 <a href="https://www.peirce.org.uk/">Jonathan Peirce</a><br/>
+          &copy; 2019 <a href="https://opensciencetools.org/">Open Science Tools Ltd.</a><br/><br/>
+        PsychoPy<sup>®</sup> and Pavlovia<sup>®</sup> are registered trademarks of Open Science Tools Ltd.<br/>
+        Created using <a href="http://sphinx-doc.org/">Sphinx</a> 8.1.3.<br/><br/>
+    </span>
+
+    <a href="http://www.nottingham.ac.uk/"><img src="../../_static/UoN_Supported_RGB.png", alt="Uni of Nottingham" width=200></a>
+  </div>
+
+</footer>
+  </body>
+</html>

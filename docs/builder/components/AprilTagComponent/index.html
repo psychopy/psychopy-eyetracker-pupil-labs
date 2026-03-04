@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>AprilTagComponent &#8212; PsychoPy Eyetracker PupilLabs Plugin 0.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=536c50fe" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/psychopy.css?v=6c31395e" />
+    <script src="../../../_static/documentation_options.js?v=d20be8f5"></script>
+    <script src="../../../_static/doctools.js?v=b682be12"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script src="../../../_static/js/jquery-fix.js"></script>
+    <script src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script src="../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../../genindex/" />
+    <link rel="search" title="Search" href="../../../search/" />
+    <link rel="next" title="Pupil Labs - Core" href="../../../coder/core/" />
+    <link rel="prev" title="Welcome to psychopy-eyetracker-pupil-labs’s documentation!" href="../../../" />
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-96LHQFPY1F"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-96LHQFPY1F');
+    </script>
+
+    <!-- News reel -->
+     <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // get all news reels
+        for (let reel of document.getElementsByClassName("news-reel")) {
+          // get all cards
+          let cards = Array.from(reel.getElementsByClassName("sd-card"))
+          // start off with the first card
+          reel.showItem = 0;
+          // define function to show the next node
+          let update = () => {
+            for (let item of cards) {
+              // get index
+              let index = cards.indexOf(item);
+              // show/hide according to index match
+              if (index === reel.showItem) {
+                console.log("Showing news item:", item)
+                item.style.display = "block";
+              } else {
+                item.style.display = "none";
+              }
+            }
+            // iterate shown index
+            reel.showItem += 1;
+            if (reel.showItem >= cards.length) {
+              reel.showItem -= cards.length;
+            }
+          }
+          // run once now
+          update()
+          // schedule to run every 5s
+          window.setInterval(update, 5000);
+        }
+      }, false);    
+     </script>
+
+    <!-- Matomo -->
+    <script>
+      var _paq = window._paq = window._paq || [];
+      /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+      _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
+      _paq.push(["setCookieDomain", "*.psychopy.org"]);
+      _paq.push(["setDomains", ["*.psychopy.org","*.discourse.psychopy.org"]]);
+      _paq.push(['trackPageView']);
+      _paq.push(['enableLinkTracking']);
+      (function() {
+        var u="//analytics.opensciencetools.org/";
+        _paq.push(['setTrackerUrl', u+'matomo.php']);
+        _paq.push(['setSiteId', '3']);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+        g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+      })();
+    </script>
+    <noscript><p><img src="//analytics.opensciencetools.org/matomo.php?idsite=3&amp;rec=1" style="border:0;" alt="" /></p></noscript>
+    <!-- End Matomo Code -->
+
+
+  </head><body>
+  
+    <!-- nav bar -->
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top" height="65px">
+    <div class="container">
+      <!-- brand logo -->
+      <a class="navbar-brand" href="../../../">
+        
+        <img src="../../../_static/navbar_plugin.png" alt="PsychoPy Logo">
+        
+      </a>
+      <!-- gap between logo and links -->
+      <div style="flex-grow: 1;"></div>
+      <!-- nav links -->
+      <div class="collapse navbar-collapse nav-collapse w-100 pull-right">
+        <ul class="nav navbar-nav ml-auto">
+          
+          
+            
+<!-- insert a regular link -->
+<li>
+    <a href="../../../download/">
+        Install
+    </a>
+</li>
+
+
+          
+          
+          
+          <li><a href="https://plugins.psychopy.org/directory.html" class="return-btn">plugins.psychopy.org</a></li>
+          
+        </ul>
+      </div>
+      <!-- shown when screen is too small for full links, clicking it toggles links shown -->
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+  </div>
+
+<!--
+
+   -->
+
+<!-- social media icon bar -->
+
+<div class="social-bar">
+
+<a href="https://github.com/psychopy/psychopy" class="github">
+    <i class="fab fa-github"></i>
+</a>
+
+<a href="https://bsky.app/profile/psychopy.org" class="bluesky">
+    <i class="fab fa-bluesky"></i>
+</a>
+
+<a href="https://www.youtube.com/watch?v=VV6qhuQgsiI&list=PLFB5A1BE51964D587" class="youtube">
+    <i class="fab fa-youtube"></i>
+</a>
+
+<a href="https://www.facebook.com/PsychoPy/" class="facebook">
+    <i class="fab fa-facebook"></i>
+</a>
+
+<a href="https://www.linkedin.com/company/open-science-tools" class="linkedin">
+    <i class="fab fa-linkedin"></i>
+</a>
+
+<a href="https://twitter.com/psychopy" class="twitter">
+    <i class="fab fa-x-twitter"></i>
+</a>
+
+</div>
+
+  
+
+<main>
+  
+  <section id="apriltagcomponent">
+<h1>AprilTagComponent<a class="headerlink" href="#apriltagcomponent" title="Link to this heading">¶</a></h1>
+<dl class="simple">
+<dt>Categories:</dt><dd><p>Eyetracking</p>
+</dd>
+<dt>Works in:</dt><dd><p>PsychoPy</p>
+</dd>
+</dl>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">¶</a></h2>
+<section id="none">
+<h3>None<a class="headerlink" href="#none" title="Link to this heading">¶</a></h3>
+<dl class="simple">
+<dt>Name</dt><dd><p>Name of this Component (alphanumeric or _, no spaces)</p>
+</dd>
+<dt>Disable Component</dt><dd><p>Disable this Component</p>
+</dd>
+</dl>
+</section>
+<section id="basic">
+<h3>Basic<a class="headerlink" href="#basic" title="Link to this heading">¶</a></h3>
+<dl>
+<dt>Start type</dt><dd><p>How do you want to define your start point?</p>
+<p>Options:
+- time (s)
+- frame N
+- condition</p>
+</dd>
+<dt>Stop type</dt><dd><p>How do you want to define your end point?</p>
+<p>Options:
+- duration (s)
+- duration (frames)
+- time (s)
+- frame N
+- condition</p>
+</dd>
+<dt>Start</dt><dd><p>When does the Component start?</p>
+</dd>
+<dt>Stop</dt><dd><p>When does the Component end? (blank is endless)</p>
+</dd>
+<dt>Expected start (s)</dt><dd><p>(Optional) expected start (s), purely for representing in the timeline</p>
+</dd>
+<dt>Expected duration (s)</dt><dd><p>(Optional) expected duration (s), purely for representing in the timeline</p>
+</dd>
+<dt>Marker ID</dt><dd><p>The ID of the AprilTag marker to display</p>
+<p>Options:
+- 0
+- 512</p>
+</dd>
+</dl>
+</section>
+<section id="data">
+<h3>Data<a class="headerlink" href="#data" title="Link to this heading">¶</a></h3>
+<dl class="simple">
+<dt>Save onset/offset times</dt><dd><p>Store the onset/offset times in the data file (as well as in the log file).</p>
+</dd>
+<dt>Sync timing with screen refresh</dt><dd><p>Synchronize times with screen refresh (good for visual stimuli and responses based on them)</p>
+</dd>
+</dl>
+</section>
+<section id="layout">
+<h3>Layout<a class="headerlink" href="#layout" title="Link to this heading">¶</a></h3>
+<dl>
+<dt>Spatial units</dt><dd><p>Units of dimensions for this stimulus</p>
+<p>Options:
+- from exp settings
+- deg
+- cm
+- pix
+- norm
+- height
+- degFlatPos
+- degFlat</p>
+</dd>
+<dt>Position [x,y]</dt><dd><p>Position of this stimulus (e.g. [1,2] )</p>
+</dd>
+<dt>Size [w,h]</dt><dd><p>Size of this stimulus (either a single value or x,y pair, e.g. 2.5, [1,2]</p>
+</dd>
+<dt>Anchor</dt><dd><p>Which point on the stimulus should be anchored to its exact position?</p>
+<p>Options:
+- center
+- top-center
+- bottom-center
+- center-left
+- center-right
+- top-left
+- top-right
+- bottom-left
+- bottom-right</p>
+</dd>
+</dl>
+</section>
+<section id="appearance">
+<h3>Appearance<a class="headerlink" href="#appearance" title="Link to this heading">¶</a></h3>
+<dl class="simple">
+<dt>Contrast</dt><dd><p>Contrast of the stimulus (1.0=unchanged contrast, 0.5=decrease contrast, 0.0=uniform/no contrast, -0.5=slightly inverted, -1.0=totally inverted)</p>
+</dd>
+</dl>
+</section>
+<section id="testing">
+<h3>Testing<a class="headerlink" href="#testing" title="Link to this heading">¶</a></h3>
+<dl>
+<dt>Validate with…</dt><dd><p>Name of validator Component/Routine to use to check the timing of this stimulus.</p>
+<p>Options:
+- VisualValidatorRoutine</p>
+</dd>
+</dl>
+</section>
+</section>
+</section>
+
+
+</div>
+<div class="col-md-12 content">
+  <br/><a href="#" class="pull-right">Back to top</a>
+</div>
+<footer class="footer">
+  <div class="container">
+    <span class="pull-right">
+      
+        
+<div id="sourcelink">
+  <a href="https://github.com/psychopy/psychopy/blob/master/docs/source/builder/components/AprilTagComponent.rst"
+     rel="nofollow">Source</a>
+</div>
+      <br/>
+
+          &copy; 2002-2018 <a href="https://www.peirce.org.uk/">Jonathan Peirce</a><br/>
+          &copy; 2019 <a href="https://opensciencetools.org/">Open Science Tools Ltd.</a><br/><br/>
+        PsychoPy<sup>®</sup> and Pavlovia<sup>®</sup> are registered trademarks of Open Science Tools Ltd.<br/>
+        Created using <a href="http://sphinx-doc.org/">Sphinx</a> 8.1.3.<br/><br/>
+    </span>
+
+    <a href="http://www.nottingham.ac.uk/"><img src="../../../_static/UoN_Supported_RGB.png", alt="Uni of Nottingham" width=200></a>
+  </div>
+
+</footer>
+  </body>
+</html>
