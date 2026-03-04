@@ -2,7 +2,7 @@
 Welcome to psychopy-eyetracker-pupil-labs's documentation!
 =======================================================
 
-The `psychopy-eyetracker-pupil-labs` plugin is designed to show you how to make a plugin.
+Adds support for Pupil Labs eyetrackers to PsychoPy
 
 .. toctree::
    :maxdepth: 1
