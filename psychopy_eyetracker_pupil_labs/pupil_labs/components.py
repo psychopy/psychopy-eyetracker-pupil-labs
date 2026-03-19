@@ -210,7 +210,7 @@ class AprilTagFrameComponent(BaseVisualComponent):
 
     def writeInitCode(self, buff):
         inits = getInitVals(self.params, 'PsychoPy')
-        if inits['marker_ids'] in ('', 'None'):
+        if inits['marker_ids'] in ('', 'None', None):
             marker_count = 2 * (int(inits['h_count'].val) + int(inits['v_count'].val)) - 4
             marker_ids = list(range(marker_count))
         else:
