@@ -145,7 +145,11 @@ class EventEntity(AttributeGetSetMixin):
 
     def trigger(self, eyetracker):
         if eyetracker is not None and hasattr(eyetracker, 'send_event'):
-            eyetracker.send_event(self.event_name, self.timestamp_ns)
+            eyetracker.send_event(
+                self.event_name,
+                self.timestamp_ns,
+                self.tStartRefresh
+            )
 
     @attributeSetter
     def event_name(self, event_name):

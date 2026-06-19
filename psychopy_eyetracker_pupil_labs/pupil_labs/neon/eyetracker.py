@@ -2,21 +2,20 @@
 # Part of the PsychoPy library
 # Copyright (C) 2012-2020 iSolver Software Solutions (C) 2021 Open Science Tools Ltd.
 # Distributed under the terms of the GNU General Public License (GPL).
-import time
-from typing import Optional, Dict, Tuple, Union
-from dataclasses import dataclass
-import multiprocessing as mp
 import asyncio
+import multiprocessing as mp
+import time
+from dataclasses import dataclass
+from typing import Dict, Optional, Tuple, Union
 
-from psychopy import logging
-from psychopy.iohub.constants import EyeTrackerConstants
+from psychopy import core, logging
+from psychopy.iohub.constants import EventConstants, EyeTrackerConstants
 from psychopy.iohub.devices import Computer, Device
 from psychopy.iohub.devices.eyetracker import EyeTrackerDevice
 from psychopy.iohub.errors import printExceptionDetailsToStdErr
-from psychopy.iohub.constants import EventConstants
 
-from pupil_labs.realtime_api import Device as CompanionDevice
 from pupil_labs.real_time_screen_gaze.gaze_mapper import GazeMapper
+from pupil_labs.realtime_api import Device as CompanionDevice
 from pupil_labs.realtime_api import (
     receive_gaze_data,
     receive_video_frames,
@@ -420,15 +419,15 @@ class EyeTracker(EyeTrackerDevice):
     def register_surface(self, tag_verts, window_size):
         self.mapper_process_command_queue.put(SurfaceMessage(tag_verts, window_size))
 
-    def send_event(self, event_name, timestamp_ns=None):
+    def send_event(self, event_name, timestamp_ns=None, global_time=None):
         if timestamp_ns in [0, None]:
-            timestamp_ns = self._psychopyTimeInTrackerTime(Computer.getTime()) * 1e9
+            timestamp_ns = self._psychopyTimeInTrackerTime(global_time or Computer.getTime()) * 1e9
 
         self.mapper_process_command_queue.put(EventMessage(event_name, timestamp_ns))
 
     def _psychopyClockOffset(self):
         t1 = time.time()
-        psychopy_time = Computer.getTime()
+        psychopy_time = core.getTime()#Computer.getTime()
         t2 = time.time()
         computer_time = (t1 + t2) / 2.0
 

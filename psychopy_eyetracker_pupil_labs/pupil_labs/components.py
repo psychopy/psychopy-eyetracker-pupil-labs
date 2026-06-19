@@ -262,6 +262,7 @@ class PLEventComponent(BaseComponent):
             exp, parentName, name=name,
             startType=startType, startVal=startVal,
             stopType=stopType, stopVal=stopVal,
+            syncScreenRefresh=True,
             *args, **kwargs
         )
 
@@ -283,6 +284,8 @@ class PLEventComponent(BaseComponent):
             hint=_translate("The timestamp of the event or `0` for automatic"),
             label=_translate("Event timestamp (ns)"))
 
+        self.hideParam("syncScreenRefresh")
+
     def writeInitCode(self, buff):
         inits = getInitVals(self.params, 'PsychoPy')
         buff.writeIndentedLines(
@@ -302,8 +305,14 @@ class PLEventComponent(BaseComponent):
 
         indented = self.writeStartTestCode(buff)
         if indented:
-            code = "%(name)s.trigger(eyetracker)" % params
+            # entity.tStartRefresh is an estimate until after the flip
+            code = "win.callOnFlip(%(name)s.trigger, eyetracker)" % params
             buff.writeIndentedLines(code)
+
+        # Dedent
+        buff.setIndentLevel(-indented, relative=True)
+
+        indented = self.writeStopTestCode(buff)
 
         # Dedent
         buff.setIndentLevel(-indented, relative=True)
