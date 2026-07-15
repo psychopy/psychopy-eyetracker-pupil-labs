@@ -427,7 +427,7 @@ class EyeTracker(EyeTrackerDevice):
 
     def _psychopyClockOffset(self):
         t1 = time.time()
-        psychopy_time = core.getTime()#Computer.getTime()
+        psychopy_time = Computer.getTime() # core.getTime()#
         t2 = time.time()
         computer_time = (t1 + t2) / 2.0
 
