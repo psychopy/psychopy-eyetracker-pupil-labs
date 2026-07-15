@@ -8,7 +8,7 @@ import time
 from dataclasses import dataclass
 from typing import Dict, Optional, Tuple, Union
 
-from psychopy import core, logging
+from psychopy import logging
 from psychopy.iohub.constants import EventConstants, EyeTrackerConstants
 from psychopy.iohub.devices import Computer, Device
 from psychopy.iohub.devices.eyetracker import EyeTrackerDevice
@@ -69,6 +69,7 @@ class EyeTracker(EyeTrackerDevice):
         self._latest_sample = None
         self._latest_gaze_position = None
         self._actively_recording = False
+        self._visual_time_sync_active = False
 
         self.mapper_process_command_queue = mp.Queue()
         self.mapper_output_queue = mp.Queue()
@@ -281,8 +282,11 @@ class EyeTracker(EyeTrackerDevice):
 
             elif isinstance(message, TimeOffsetMessage):
                 self._time_offset_estimate = message.offset_value
-                mean_ms = self._time_offset_estimate.time_offset_ms.mean
-                logging.info(f"Received clock offset estimate: {mean_ms}ms")
+                logging.info(f"Received clock offset estimate: {self._time_offset_estimate:.2f}ms")
+
+            elif isinstance(message, VisualTimeSyncStopMessage):
+                self._visual_time_sync_active = False
+                logging.info("Visual time sync stopped.")
 
     def _add_gaze_sample(self, surface_gaze, gaze_datum, logged_time):
         native_time = gaze_datum.timestamp_unix_seconds
@@ -419,6 +423,16 @@ class EyeTracker(EyeTrackerDevice):
     def register_surface(self, tag_verts, window_size):
         self.mapper_process_command_queue.put(SurfaceMessage(tag_verts, window_size))
 
+    def start_visual_time_sync(self, sample_count):
+        self._visual_time_sync_active = True
+        self.mapper_process_command_queue.put(VisualTimeSyncStartMessage(sample_count))
+
+    def send_visual_sync_frame(self, psychopy_timestamp, marker_id):
+        self.mapper_process_command_queue.put(VisualTimeSyncFrameMessage(
+            psychopy_timestamp + self._psychopyClockOffset(),
+            marker_id
+        ))
+
     def send_event(self, event_name, timestamp_ns=None, global_time=None):
         if timestamp_ns in [0, None]:
             timestamp_ns = self._psychopyTimeInTrackerTime(global_time or Computer.getTime()) * 1e9
@@ -427,7 +441,7 @@ class EyeTracker(EyeTrackerDevice):
 
     def _psychopyClockOffset(self):
         t1 = time.time()
-        psychopy_time = Computer.getTime() # core.getTime()#
+        psychopy_time = Computer.getTime()
         t2 = time.time()
         computer_time = (t1 + t2) / 2.0
 
@@ -436,11 +450,11 @@ class EyeTracker(EyeTrackerDevice):
     def _psychopyTimeInTrackerTime(self, psychopy_time):
         psychopy_offset = self._psychopyClockOffset()
         computer_time = psychopy_time + psychopy_offset
-        return computer_time - self._time_offset_estimate.time_offset_ms.mean / 1e3
+        return computer_time - self._time_offset_estimate / 1e3
 
     def _trackerTimeInPsychopyTime(self, tracker_time):
         psychopy_offset = self._psychopyClockOffset()
-        computer_time = (tracker_time + self._time_offset_estimate.time_offset_ms.mean / 1e3)
+        computer_time = tracker_time + self._time_offset_estimate / 1e3
         return computer_time - psychopy_offset
 
     def _close(self):
@@ -449,6 +463,9 @@ class EyeTracker(EyeTrackerDevice):
         self.setConnectionState(False)
         self.__class__._INSTANCE = None
         super()._close()
+
+    def isVisualTimeSyncActive(self):
+        return self._visual_time_sync_active
 
 @dataclass
 class StopMessage:
@@ -465,7 +482,7 @@ class RecordMessage:
 
 @dataclass
 class TimeOffsetMessage:
-    offset_value: object
+    offset_value: float
 
 @dataclass
 class MappedGazeMessage:
@@ -476,6 +493,19 @@ class MappedGazeMessage:
 class EventMessage:
     event_name: str
     timestamp_ns: int
+
+@dataclass
+class VisualTimeSyncStartMessage:
+    sample_count: int
+
+@dataclass
+class VisualTimeSyncFrameMessage:
+    psychopy_time: float
+    marker_id: int
+
+@dataclass
+class VisualTimeSyncStopMessage:
+    pass
 
 
 def bg_gaze_mapper(host, port, input_queue, output_queue):
@@ -496,6 +526,14 @@ class AsyncQueueMapper:
         self.device = None
         self.gaze_mapper = None
 
+        self.visual_sync_active = False
+        self.visual_sync_marker_uid = None
+        self.visual_sync_sample_count = 0
+        self.visual_sync_samples = []
+        self.visual_sync_pending_frames = {}   # marker_id -> frame_unix_ts (frame arrived first)
+        self.visual_sync_pending_flashes = {}  # marker_id -> psychopy_ts  (psychopy msg arrived first)
+        self.stop_offset_estimator_event = asyncio.Event()
+
     async def run_tasks(self):
         self.device = CompanionDevice(self.host, self.port)
 
@@ -513,10 +551,17 @@ class AsyncQueueMapper:
 
     async def offset_estimator_loop(self, status):
         while not self.stop_event.is_set():
+            if self.stop_offset_estimator_event.is_set():
+                break
+
+            if self.visual_sync_active:
+                await asyncio.sleep(1)
+                continue
+
             estimator = TimeOffsetEstimator(self.host, status.phone.time_echo_port)
             estimated_offset = await estimator.estimate()
 
-            self.output_queue.put(TimeOffsetMessage(estimated_offset))
+            self.output_queue.put(TimeOffsetMessage(estimated_offset.time_offset_ms.mean))
             await asyncio.sleep(30)
 
     async def check_input_queue(self):
@@ -558,7 +603,39 @@ class AsyncQueueMapper:
                         logging.error(f"Failed to change recording state (enabled={message.state}): {exc}")
                         printExceptionDetailsToStdErr()
 
+                elif isinstance(message, VisualTimeSyncStartMessage):
+                    self.visual_sync_active = True
+                    self.visual_sync_sample_count = message.sample_count
+                    self.visual_sync_samples = []
+                    self.visual_sync_pending_frames = {}
+                    self.visual_sync_pending_flashes = {}
+
+                elif isinstance(message, VisualTimeSyncFrameMessage):
+                    if message.marker_id in self.visual_sync_pending_frames:
+                        self._record_visual_sync_sample(
+                            message.psychopy_time,
+                            self.visual_sync_pending_frames.pop(message.marker_id)
+                        )
+                    else:
+                        self.visual_sync_pending_flashes[message.marker_id] = message.psychopy_time
+
             await asyncio.sleep(0.001)
+
+    def _record_visual_sync_sample(self, psychopy_ts, frame_unix_ts):
+        self.visual_sync_samples.append((psychopy_ts, frame_unix_ts))
+        if len(self.visual_sync_samples) >= self.visual_sync_sample_count:
+            self._finalize_visual_sync()
+
+    def _finalize_visual_sync(self):
+        self.stop_offset_estimator_event.set()
+        offsets = [
+            (psychopy_time - frame_time)
+            for psychopy_time, frame_time in self.visual_sync_samples
+        ]
+        mean_offset_ms = sum(offsets) / len(offsets) * 1000
+        self.output_queue.put(TimeOffsetMessage(mean_offset_ms))
+        self.visual_sync_active = False
+        self.output_queue.put(VisualTimeSyncStopMessage())
 
     async def receive_and_queue_scene_data(self, status):
         sensor_world = status.direct_world_sensor()
@@ -567,6 +644,17 @@ class AsyncQueueMapper:
                 break
 
             self.gaze_mapper.process_scene(frame)
+
+            if self.visual_sync_active:
+                for marker in self.gaze_mapper._detected_markers:
+                    marker_id = int(marker.uid.split(":")[1])
+                    frame_unix_ts = frame.timestamp_unix_seconds
+                    if marker_id in self.visual_sync_pending_flashes:
+                        psychopy_ts = self.visual_sync_pending_flashes.pop(marker_id)
+                        self._record_visual_sync_sample(psychopy_ts, frame_unix_ts)
+
+                    elif marker_id not in self.visual_sync_pending_frames:
+                        self.visual_sync_pending_frames[marker_id] = frame_unix_ts
 
     async def receive_and_queue_gaze_data(self, status):
         sensor_gaze = status.direct_gaze_sensor()

@@ -316,3 +316,88 @@ class PLEventComponent(BaseComponent):
 
         # Dedent
         buff.setIndentLevel(-indented, relative=True)
+
+
+class VisualTimeSyncComponent(AprilTagComponent):
+    targets = ['PsychoPy']
+    categories = ['Eyetracking']
+    iconFile = Path(__file__).parent.parent / 'time_sync.png'
+    tooltip = _translate('Visual time sync: A visual stimulus to synchronize the eyetracker and PsychoPy clocks')
+
+    def __init__(
+        self, exp, parentName,
+        name='visualTimeSync', marker_id=0, anchor="center", size=(0.2, 0.2),
+        startType='time (s)', startVal=0.0, sampleCount=10, minFlashPeriod=33,
+        *args, **kwargs
+    ):
+        super().__init__(
+            exp, parentName, name=name,
+            marker_id=marker_id, anchor=anchor, size=size,
+            startType=startType, startVal=startVal,
+            *args, **kwargs
+        )
+
+        self.params['sampleCount'] = Param(
+            sampleCount, valType='int', inputType="single", allowedTypes=[], categ='Basic',
+            updates='constant', allowedUpdates=['constant', 'set every repeat'],
+            hint=_translate("The number of samples to collect for the visual time sync"),
+            label=_translate("Sample Count")
+        )
+
+        self.params['minFlashPeriod'] = Param(
+            minFlashPeriod, valType='int', inputType="single", allowedTypes=[], categ='Basic',
+            updates='constant', allowedUpdates=['constant', 'set every repeat'],
+            hint=_translate("The minimum duration of a sync flash in milliseconds"),
+            label=_translate("Min Flash Period")
+        )
+
+    def writeInitCode(self, buff):
+        super().writeInitCode(buff)
+        inits = getInitVals(self.params, 'PsychoPy')
+        code = ("{inits[name]}._vts_next_flash = None\n"
+                "{inits[name]}._vts_flash_end = None\n"
+                "{inits[name]}._vts_flash_count = 0\n"
+                "{inits[name]}.autoDraw = False\n"
+                .format(inits=inits))
+
+        buff.writeIndentedLines(code)
+
+    def writeRoutineStartCode(self, buff):
+        return
+
+    def writeFrameCode(self, buff):
+        params = self.params.copy()
+
+        buff.writeIndented("\n")
+        buff.writeIndentedLines("# *%(name)s* updates\n" % params)
+
+        indented = self.writeStartTestCode(buff)
+        if indented:
+            code = ("%(name)s._vts_next_flash = tThisFlip\n"
+                    "if eyetracker is not None:\n"
+                    "    eyetracker.start_visual_time_sync(%(sampleCount)s)\n"
+                    % params)
+            buff.writeIndentedLines(code)
+        buff.setIndentLevel(-indented, relative=True)
+
+        code = ("if %(name)s.status == STARTED and %(name)s._vts_next_flash is not None:\n"
+                "    if eyetracker is not None and not eyetracker.isVisualTimeSyncActive():\n"
+                "        %(name)s.status = FINISHED\n"
+                "    elif tThisFlip >= %(name)s._vts_next_flash:\n"
+                "        _flash_marker_id = %(name)s._vts_flash_count %% 512\n"
+                "        %(name)s.set_marker_id(_flash_marker_id)\n"
+                "        %(name)s.draw()\n"
+                "        win.callOnFlip(eyetracker.send_visual_sync_frame, tThisFlipGlobal, _flash_marker_id)\n"
+                "        %(name)s._vts_flash_end = tThisFlip + %(minFlashPeriod)s / 1000\n"
+                "        %(name)s._vts_next_flash = tThisFlip + 0.5\n"
+                "        %(name)s._vts_flash_count += 1\n"
+                "    elif tThisFlip >= %(name)s._vts_flash_end:\n"
+                "        pass # nop\n"
+                % params)
+        buff.writeIndentedLines(code)
+
+        indented = self.writeStopTestCode(buff)
+        if indented:
+            buff.writeIndentedLines("%(name)s.setAutoDraw(False)\n" % params)
+
+        buff.setIndentLevel(-indented, relative=True)

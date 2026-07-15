@@ -69,3 +69,4 @@ PupilLabsNeonEyetrackerBackend = "psychopy_eyetracker_pupil_labs.pupil_labs.neon
 AprilTagComponent = "psychopy_eyetracker_pupil_labs.pupil_labs.components:AprilTagComponent"
 AprilTagFrameComponent = "psychopy_eyetracker_pupil_labs.pupil_labs.components:AprilTagFrameComponent"
 PLEventComponent = "psychopy_eyetracker_pupil_labs.pupil_labs.components:PLEventComponent"
+VisualTimeSyncComponent = "psychopy_eyetracker_pupil_labs.pupil_labs.components:VisualTimeSyncComponent"
