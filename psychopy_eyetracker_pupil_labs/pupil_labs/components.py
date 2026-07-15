@@ -326,8 +326,9 @@ class VisualTimeSyncComponent(AprilTagComponent):
 
     def __init__(
         self, exp, parentName,
-        name='visualTimeSync', marker_id=0, anchor="center", size=(0.2, 0.2),
-        startType='time (s)', startVal=0.0, sampleCount=10, minFlashPeriod=33,
+        name="visualTimeSync", marker_id=0, anchor="center", size=(0.2, 0.2),
+        startType="time (s)", startVal=0.0, sampleCount=10, minFlashPeriod=33,
+        endRoutineOnComplete=True,
         *args, **kwargs
     ):
         super().__init__(
@@ -337,18 +338,25 @@ class VisualTimeSyncComponent(AprilTagComponent):
             *args, **kwargs
         )
 
-        self.params['sampleCount'] = Param(
-            sampleCount, valType='int', inputType="single", allowedTypes=[], categ='Basic',
-            updates='constant', allowedUpdates=['constant', 'set every repeat'],
+        self.params["sampleCount"] = Param(
+            sampleCount, valType="int", inputType="single", allowedTypes=[], categ="Basic",
+            updates="constant", allowedUpdates=["constant", "set every repeat"],
             hint=_translate("The number of samples to collect for the visual time sync"),
             label=_translate("Sample Count")
         )
 
-        self.params['minFlashPeriod'] = Param(
-            minFlashPeriod, valType='int', inputType="single", allowedTypes=[], categ='Basic',
-            updates='constant', allowedUpdates=['constant', 'set every repeat'],
+        self.params["minFlashPeriod"] = Param(
+            minFlashPeriod, valType="int", inputType="single", allowedTypes=[], categ="Basic",
+            updates="constant", allowedUpdates=["constant", "set every repeat"],
             hint=_translate("The minimum duration of a sync flash in milliseconds"),
             label=_translate("Min Flash Period")
+        )
+
+        self.params["endRoutineOnComplete"] = Param(
+            endRoutineOnComplete, valType="bool", inputType="bool", allowedTypes=[], categ="Basic",
+            updates="constant", allowedUpdates=["constant"],
+            hint=_translate("Whether to end the routine when the visual time sync routine is complete"),
+            label=_translate("End Routine on Complete")
         )
 
     def writeInitCode(self, buff):
@@ -383,6 +391,8 @@ class VisualTimeSyncComponent(AprilTagComponent):
         code = ("if %(name)s.status == STARTED and %(name)s._vts_next_flash is not None:\n"
                 "    if eyetracker is not None and not eyetracker.isVisualTimeSyncActive():\n"
                 "        %(name)s.status = FINISHED\n"
+                "        if %(endRoutineOnComplete)s:\n"
+                "            continueRoutine = False\n"
                 "    elif tThisFlip >= %(name)s._vts_next_flash:\n"
                 "        _flash_marker_id = %(name)s._vts_flash_count %% 512\n"
                 "        %(name)s.set_marker_id(_flash_marker_id)\n"
