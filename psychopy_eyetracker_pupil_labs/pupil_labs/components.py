@@ -399,10 +399,10 @@ class VisualTimeSyncComponent(AprilTagComponent):
                 "        %(name)s.draw()\n"
                 "        win.callOnFlip(eyetracker.send_visual_sync_frame, tThisFlipGlobal, _flash_marker_id)\n"
                 "        %(name)s._vts_flash_end = tThisFlip + %(minFlashPeriod)s / 1000\n"
-                "        %(name)s._vts_next_flash = tThisFlip + 0.5\n"
+                "        %(name)s._vts_next_flash = %(name)s._vts_flash_end + 0.5\n"
                 "        %(name)s._vts_flash_count += 1\n"
-                "    elif tThisFlip >= %(name)s._vts_flash_end:\n"
-                "        pass # nop\n"
+                "    elif %(name)s._vts_flash_end is not None and tThisFlip < %(name)s._vts_flash_end:\n"
+                "        %(name)s.draw()\n"
                 % params)
         buff.writeIndentedLines(code)
 
