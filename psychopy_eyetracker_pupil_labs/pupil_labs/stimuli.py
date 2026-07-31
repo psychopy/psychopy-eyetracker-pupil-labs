@@ -14,19 +14,19 @@ class AprilTagStim(ImageStim):
         self.marker_id = marker_id
 
         marker_data = marker_generator.generate_marker(marker_id, flip_x=True).astype(float)
-        marker_data[marker_data == 0] = -contrast
-        marker_data[marker_data > 0] = contrast
+        marker_data[marker_data == 0] = -1
+        marker_data[marker_data > 0] = 1
 
-        marker_data = np.pad(marker_data, pad_width=1, mode="constant", constant_values=contrast)
+        marker_data = np.pad(marker_data, pad_width=1, mode="constant", constant_values=1)
 
-        super().__init__(image=marker_data, *args, **kwargs)
+        super().__init__(image=marker_data, contrast=contrast, *args, **kwargs)
 
     def set_marker_id(self, marker_id):
         self.marker_id = marker_id
         marker_data = marker_generator.generate_marker(marker_id, flip_x=True).astype(float)
-        marker_data[marker_data == 0] = -self.contrast
-        marker_data[marker_data > 0] = self.contrast
-        marker_data = np.pad(marker_data, pad_width=1, mode="constant", constant_values=self.contrast)
+        marker_data[marker_data == 0] = -1
+        marker_data[marker_data > 0] = 1
+        marker_data = np.pad(marker_data, pad_width=1, mode="constant", constant_values=1)
         self.image = marker_data
 
     @property
